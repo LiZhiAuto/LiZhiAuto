@@ -12,6 +12,8 @@ public class test extends UiAutomatorTestCase {
 
 
 	public static int INDEX = 2;
+	
+	public static int TOTALNUM = 140;
 
 	private String articleString;
 	public void testDemo() throws UiObjectNotFoundException {   
@@ -36,14 +38,17 @@ public class test extends UiAutomatorTestCase {
 
 		IsExistUpdate();
 
-		System.out.println("-----------文章全部列表UI验证-----------");
-		ArticleUICheck();
+		//		System.out.println("-----------文章全部列表UI验证-----------");
+		//		ArticleUICheck();
 
 		//		System.out.println("-----------文章点赞及取消点赞功能验证-----------");
 		//		articlePraise(INDEX);
 		//
 		//		System.out.println("-----------文章收藏以及取消收藏功能验证-----------");
 		//		collectArticle(INDEX);
+
+		System.out.println("-----------文章评论功能验证-----------");
+		ArticleComment(INDEX);
 
 	}
 
@@ -167,6 +172,11 @@ public class test extends UiAutomatorTestCase {
 
 
 
+	/**
+	 * 文章全部列表UI验证
+	 * @param 
+	 * @return
+	 */
 	public void ArticleUICheck() throws UiObjectNotFoundException{
 
 		UiObject article = new UiObject(new UiSelector().text(Constant.article)); 
@@ -193,7 +203,7 @@ public class test extends UiAutomatorTestCase {
 			textView = date.getChild(new UiSelector().index(0)).getChild(new UiSelector().index(0)).getChild(new UiSelector().index(1)).getChild(new UiSelector().index(1));
 			Constant.WriteLog(Constant.info, "第"+i+"条的时间为      "+textView.getText().toString());
 		}
-		
+
 
 	}
 
@@ -321,7 +331,7 @@ public class test extends UiAutomatorTestCase {
 	 * @param  文章的索引值
 	 * @return 
 	 */
-	public void articlePraise(int index){
+	public void ArticlePraise(int index){
 
 		ArticalItem(index);
 		try {
@@ -336,7 +346,7 @@ public class test extends UiAutomatorTestCase {
 				Constant.WriteLog(Constant.info, "点击前点赞数为："+praiseBeforeNum);
 				//找到点赞按钮
 				UiCollection resultspage=new UiCollection(new UiSelector().className(android.widget.LinearLayout.class.getName()));
-				UiObject resultLayout=resultspage.getChildByInstance(new UiSelector().className(android.widget.LinearLayout.class.getName()), 2);
+				UiObject resultLayout=resultspage.getChildByInstance(new UiSelector().className(android.widget.LinearLayout.class.getName()), 3);
 				UiObject praise=resultLayout.getChild(new UiSelector().className("android.widget.ImageButton")); 
 				praise.click();
 				//判断点赞后是否跳转到了登录界面
@@ -345,7 +355,7 @@ public class test extends UiAutomatorTestCase {
 				if(loginTip.exists()){
 					Constant.WriteLog(Constant.info, "当前为未登录状态，进行登录操作");
 					DialogLoginOn();
-					articlePraise(index);
+					ArticlePraise(index);
 					break;
 				}else{
 					int praiseAfterNum = getAriticlePraise();
@@ -394,6 +404,79 @@ public class test extends UiAutomatorTestCase {
 		}
 
 		return praiseNum;
+	}
+
+
+	/**
+	 * 文章评论功能
+	 * @param  index
+	 * @return
+	 * @throws UiObjectNotFoundException 
+	 */
+
+	public void  ArticleComment(int index) throws UiObjectNotFoundException{
+		ArticalItem(index);
+
+		//找到评论按钮
+		UiCollection resultspage=new UiCollection(new UiSelector().className(android.widget.LinearLayout.class.getName()));
+		UiObject resultLayout=resultspage.getChildByInstance(new UiSelector().className(android.widget.LinearLayout.class.getName()), 4);
+		UiObject comment=resultLayout.getChild(new UiSelector().className("android.widget.ImageButton")); 
+		comment.clickAndWaitForNewWindow();
+
+		//点击评论按钮
+		UiObject commentTextView = new UiObject(new UiSelector().text(Constant.comment));
+		commentTextView.clickAndWaitForNewWindow();
+
+//		Constant.WriteLog(Constant.info, "不填写内容,发表空的评论");
+//		//点击发表按钮
+//		UiObject publicTextView = new UiObject(new UiSelector().text(Constant.pubic));
+//		publicTextView.click();
+//
+//		commentTextView = new UiObject(new UiSelector().text(Constant.comment));
+//		if(commentTextView.exists()){
+//			Constant.WriteLog(Constant.fail, "空评论发表成功");
+//			return ;
+//		}else{
+//			Constant.WriteLog(Constant.info, "空评论发表失败");
+//		}
+
+
+		Constant.WriteLog(Constant.info, "填写内容\"good\"");
+
+		UiObject commentEditText = new UiObject(new UiSelector().text(Constant.saySomething));
+		commentEditText.setText("good");
+
+		//获取输入内容后，允许字符剩余多少
+
+		//找到评论按钮
+		resultspage=new UiCollection(new UiSelector().className(android.widget.LinearLayout.class.getName()));
+		resultLayout=resultspage.getChildByInstance(new UiSelector().className(android.widget.LinearLayout.class.getName()), 4);
+		UiObject limitNum =resultLayout.getChild(new UiSelector().className(android.widget.TextView.class.getName()));
+		int changNum = Integer.valueOf(limitNum.getText().toString()).intValue();
+		Constant.WriteLog(Constant.info, "剩余字数为"+changNum);
+		if(TOTALNUM-changNum==4){
+			Constant.WriteLog(Constant.info, "符合字数变化规则");
+		}else{
+			Constant.WriteLog(Constant.fail, "不符合字数变化规则");
+			return ;
+		}
+		
+	}
+
+
+
+	/**
+	 * 获取评论个数
+	 * @param 
+	 * @return
+	 */
+	public int GetArticleComment() throws UiObjectNotFoundException{
+		int commentNum =0 ;
+		UiCollection frameLayoutCollect=new UiCollection(new UiSelector().className(android.widget.FrameLayout.class.getName()));
+		UiObject frameLayoutPraise = frameLayoutCollect.getChildByInstance(new UiSelector().className(android.widget.FrameLayout.class.getName()), 5);
+		UiObject commentTextView = frameLayoutPraise.getChild(new UiSelector().className("android.widget.TextView"));
+		commentNum = Integer.valueOf(commentTextView.getText().toString()).intValue();
+		return commentNum;
 	}
 
 

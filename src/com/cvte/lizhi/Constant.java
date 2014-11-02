@@ -14,7 +14,12 @@ public class Constant {
 	public static String noLoginTip = "你还没有登录哦";
 	
 	public static String mailLogin = "邮箱登录";
-	public static String s = "s";
+	
+	public static String comment = "评论";
+	
+	public static String pubic = "发表";
+	
+	public static String saySomething = "说点啥";
 	/**
 	 * log 等级
 	 */
