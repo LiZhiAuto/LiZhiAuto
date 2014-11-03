@@ -1,8 +1,7 @@
 
 package com.cvte.lizhi;
 
-
-import com.android.uiautomator.core.UiCollection;
+import com.android.uiautomator.core.UiDevice;
 import com.android.uiautomator.core.UiObject;
 import com.android.uiautomator.core.UiObjectNotFoundException;
 import com.android.uiautomator.core.UiScrollable;
@@ -14,13 +13,14 @@ public class test extends UiAutomatorTestCase {
 
 	public static int INDEX = 2;
 	
-
+	public static UiDevice  uidevice ;
 
 	
 	public void testDemo() throws UiObjectNotFoundException {   
 
 		// Simulate a short press on the HOME button.
 		// getUiDevice().pressHome();
+		uidevice = getUiDevice();
 
 		getUiDevice().pressHome();
 		UiObject allAppsButton = new UiObject(new UiSelector().description("应用"));
@@ -38,18 +38,21 @@ public class test extends UiAutomatorTestCase {
 		settingsApp.clickAndWaitForNewWindow();
 
 		IsExistUpdate();
-
+		Article article = new Article();
 		//		System.out.println("-----------文章全部列表UI验证-----------");
 		//		ArticleUICheck();
 
-		//		System.out.println("-----------文章点赞及取消点赞功能验证-----------");
-		//		articlePraise(INDEX);
-		//
-		//		System.out.println("-----------文章收藏以及取消收藏功能验证-----------");
-		//		collectArticle(INDEX);
+//				System.out.println("-----------文章点赞及取消点赞功能验证-----------");
+				
+//				article.ArticlePraise(INDEX);
 
-		//System.out.println("-----------文章评论功能验证-----------");
-		//ArticleComment(INDEX);
+		
+//				System.out.println("-----------文章收藏以及取消收藏功能验证-----------");
+//				
+//				article.collectArticle(INDEX);
+
+		System.out.println("-----------文章评论功能验证-----------");
+		article.ArticleComment(INDEX);
 
 	}
 

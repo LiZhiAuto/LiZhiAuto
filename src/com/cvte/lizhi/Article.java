@@ -8,13 +8,13 @@ import com.android.uiautomator.testrunner.UiAutomatorTestCase;
 
 public class Article extends UiAutomatorTestCase {
 
-	
+
 	public  int TOTALNUM = 140;
-	
+
 	private String articleString;
-	
-	
-	
+
+
+
 	/**
 	 * 弹出框形式的登录操作
 	 */
@@ -47,8 +47,8 @@ public class Article extends UiAutomatorTestCase {
 		}
 
 	}
-	
-	
+
+
 	/**
 	 * 文章列表item的点击
 	 * @param index
@@ -158,8 +158,8 @@ public class Article extends UiAutomatorTestCase {
 					}
 
 					//返回到文章列表
-					getUiDevice().pressBack();
-					getUiDevice().pressBack();
+					test.uidevice.pressBack();
+					test.uidevice.pressBack();
 
 					UiObject my = new UiObject(new UiSelector().text(Constant.my)); 
 					my.click();
@@ -242,8 +242,6 @@ public class Article extends UiAutomatorTestCase {
 
 		ArticalItem(index);
 		try {
-
-			//UiDevice.getInstance().
 			for(int i=0;i<2;i++){
 				if(i==1){
 					//再次进行点赞操作
@@ -278,10 +276,16 @@ public class Article extends UiAutomatorTestCase {
 
 
 				}
+				if(i==1){
+					//找到返回按钮
+					resultspage=new UiCollection(new UiSelector().className(android.widget.LinearLayout.class.getName()));
+					UiObject linearLayout=resultspage.getChildByInstance(new UiSelector().className(android.widget.LinearLayout.class.getName()), 2);
+					UiObject back =linearLayout.getChild(new UiSelector().className("android.widget.ImageView").index(0)); 
+					back.click();
+				}
 			}
 
-			//返回到主界面
-			getUiDevice().pressBack();
+
 		} catch (UiObjectNotFoundException e) {
 
 			e.printStackTrace();
@@ -330,32 +334,44 @@ public class Article extends UiAutomatorTestCase {
 		UiObject comment=resultLayout.getChild(new UiSelector().className("android.widget.ImageButton")); 
 		comment.clickAndWaitForNewWindow();
 
+
+
 		//点击评论按钮
 		UiObject commentTextView = new UiObject(new UiSelector().text(Constant.comment));
 		commentTextView.clickAndWaitForNewWindow();
 
-//		Constant.WriteLog(Constant.info, "不填写内容,发表空的评论");
-//		//点击发表按钮
-//		UiObject publicTextView = new UiObject(new UiSelector().text(Constant.pubic));
-//		publicTextView.click();
-//
-//		commentTextView = new UiObject(new UiSelector().text(Constant.comment));
-//		if(commentTextView.exists()){
-//			Constant.WriteLog(Constant.fail, "空评论发表成功");
-//			return ;
-//		}else{
-//			Constant.WriteLog(Constant.info, "空评论发表失败");
-//		}
+		Constant.WriteLog(Constant.info, "不填写内容,发表空的评论");
+		//点击发表按钮
+		UiObject publicTextView = new UiObject(new UiSelector().text(Constant.pubic));
+		publicTextView.click();
 
+		commentTextView = new UiObject(new UiSelector().text(Constant.comment));
+		if(commentTextView.exists()){
+			Constant.WriteLog(Constant.fail, "空评论发表成功");
+			return ;
+		}else{
+			Constant.WriteLog(Constant.info, "空评论发表失败");
+		}
 
+		Constant.WriteLog(Constant.info, "填写内容超过140个字符");
+		UiObject commentEditText = new UiObject(new UiSelector().text(Constant.saySomething));
+		commentEditText.setText(Constant.longString);
+		publicTextView = new UiObject(new UiSelector().text(Constant.pubic));
+		if(!publicTextView.isClickable()){
+			Constant.WriteLog(Constant.info, "填写内容超过140个字符时，发表按钮变灰");
+		}else{
+			Constant.WriteLog(Constant.info, "填写内容超过140个字符时，发表按钮未变成灰色");
+		}
+		
+		
 		Constant.WriteLog(Constant.info, "填写内容\"good\"");
 
-		UiObject commentEditText = new UiObject(new UiSelector().text(Constant.saySomething));
+		commentEditText = new UiObject(new UiSelector().text(Constant.longString));
+		commentEditText.clearTextField();
+		commentEditText = new UiObject(new UiSelector().text(Constant.saySomething));
 		commentEditText.setText("good");
 
 		//获取输入内容后，允许字符剩余多少
-
-		//找到评论按钮
 		resultspage=new UiCollection(new UiSelector().className(android.widget.LinearLayout.class.getName()));
 		resultLayout=resultspage.getChildByInstance(new UiSelector().className(android.widget.LinearLayout.class.getName()), 4);
 		UiObject limitNum =resultLayout.getChild(new UiSelector().className(android.widget.TextView.class.getName()));
@@ -367,7 +383,21 @@ public class Article extends UiAutomatorTestCase {
 			Constant.WriteLog(Constant.fail, "不符合字数变化规则");
 			return ;
 		}
-		
+		//点击发表
+		publicTextView.click();
+
+		//获取第一个评论的内容
+		UiObject listview = new UiObject(new UiSelector().className("android.widget.ListView"));
+		UiObject Channel = listview.getChild(new UiSelector().index(1));
+		UiObject content = Channel.getChild(new UiSelector().className(android.widget.TextView.class.getName()).instance(3));
+		Constant.WriteLog(Constant.info, "列表第一条评论为"+content.getText().toString()); 
+		if(content.getText().toString().equals("good")){
+			Constant.WriteLog(Constant.info, "与发表的评论内容相同，评论发表成功"); 
+		}else{
+			Constant.WriteLog(Constant.fail, "与发表的评论内容不相同，评论发表失败"); 
+		}
+
+
 	}
 
 
