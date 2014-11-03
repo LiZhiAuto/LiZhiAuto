@@ -15,6 +15,11 @@ public class Constant {
 	
 	public static String mailLogin = "邮箱登录";
 	
+	public static String comment = "评论";
+	
+	public static String pubic = "发表";
+	
+	public static String saySomething = "说点啥";
 	/**
 	 * log 等级
 	 */
