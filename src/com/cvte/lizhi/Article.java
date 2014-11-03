@@ -16,7 +16,7 @@ public class Article extends UiAutomatorTestCase {
 
 
 	/**
-	 * µ¯³ö¿òĞÎÊ½µÄµÇÂ¼²Ù×÷
+	 * å¼¹å‡ºæ¡†å½¢å¼çš„ç™»å½•æ“ä½œ
 	 */
 	public void DialogLoginOn(){
 		try {
@@ -25,7 +25,7 @@ public class Article extends UiAutomatorTestCase {
 
 			mailLogin.clickAndWaitForNewWindow();
 
-			UiObject mailEdit = new UiObject(new UiSelector().text("ÓÊÏä"));
+			UiObject mailEdit = new UiObject(new UiSelector().text("é‚®ç®±"));
 
 			mailEdit.setText("411249087@qq.com");
 
@@ -34,11 +34,11 @@ public class Article extends UiAutomatorTestCase {
 			passwordEdit.setText("123456");
 
 
-			UiObject login = new UiObject(new UiSelector().text("µÇÂ¼"));
+			UiObject login = new UiObject(new UiSelector().text("ç™»å½•"));
 
 			login.clickAndWaitForNewWindow();
 
-			Constant.WriteLog(Constant.info, "µÇÂ¼³É¹¦");
+			Constant.WriteLog(Constant.info, "ç™»å½•æˆåŠŸ");
 
 		} catch (UiObjectNotFoundException e) {
 
@@ -50,7 +50,7 @@ public class Article extends UiAutomatorTestCase {
 
 
 	/**
-	 * ÎÄÕÂÁĞ±íitemµÄµã»÷
+	 * æ–‡ç« åˆ—è¡¨itemçš„ç‚¹å‡»
 	 * @param index
 	 */
 	public void ArticalItem(int index){
@@ -61,14 +61,14 @@ public class Article extends UiAutomatorTestCase {
 
 			UiObject listview = new UiObject(new UiSelector().className("android.widget.ListView"));
 
-			//»ñÈ¡itemÖĞÖ÷ÌâµÄÄÚÈİ
+			//è·å–itemä¸­ä¸»é¢˜çš„å†…å®¹
 
 			//UiObject textViews = listview.getChild(new UiSelector().clickable(true).index(index));
-			//´Ë´¦ÓĞ¶à¸ötextView µ«ÊÇ±êÌâÊÇµÚÒ»¸ötextView ËùÒÔÄ¬ÈÏÊÇ²éÕÒµÄÊÇËü
+			//æ­¤å¤„æœ‰å¤šä¸ªtextView ä½†æ˜¯æ ‡é¢˜æ˜¯ç¬¬ä¸€ä¸ªtextView æ‰€ä»¥é»˜è®¤æ˜¯æŸ¥æ‰¾çš„æ˜¯å®ƒ
 			UiObject textView = listview.getChild(new UiSelector().clickable(true).index(index)).getChild(new UiSelector().className("android.widget.TextView"));
 
 			articleString = textView.getText().toString();
-			Constant.WriteLog(Constant.info, "Ëùµã»÷µÄÎÄÕÂ±êÌâÎª"+textView.getText().toString());
+			Constant.WriteLog(Constant.info, "æ‰€ç‚¹å‡»çš„æ–‡ç« æ ‡é¢˜ä¸º"+textView.getText().toString());
 			listview.getChild(new UiSelector().clickable(true).index(index)).click();
 		} catch (UiObjectNotFoundException e) {
 
@@ -80,7 +80,7 @@ public class Article extends UiAutomatorTestCase {
 
 
 	/**
-	 * ÎÄÕÂÈ«²¿ÁĞ±íUIÑéÖ¤
+	 * æ–‡ç« å…¨éƒ¨åˆ—è¡¨UIéªŒè¯
 	 * @param 
 	 * @return
 	 */
@@ -88,27 +88,27 @@ public class Article extends UiAutomatorTestCase {
 
 		UiObject article = new UiObject(new UiSelector().text(Constant.article)); 
 		article.click();
-		//²éÕÒµ½¶ÔÓ¦µÄÈ«²¿ÁĞ±íµÄtextView
+		//æŸ¥æ‰¾åˆ°å¯¹åº”çš„å…¨éƒ¨åˆ—è¡¨çš„textView
 		UiCollection frameLayoutCollect=new UiCollection(new UiSelector().className(android.widget.FrameLayout.class.getName()));
 		UiObject frameLayoutPraise = frameLayoutCollect.getChildByInstance(new UiSelector().className(android.widget.FrameLayout.class.getName()), 4);
 		UiObject allTextView = frameLayoutPraise.getChild(new UiSelector().className(android.widget.TextView.class.getName()));
 		allTextView.click();
 
-		//ÁĞ±íÖĞµÄ±êÌâ²é¿´
+		//åˆ—è¡¨ä¸­çš„æ ‡é¢˜æŸ¥çœ‹
 		UiObject listview = new UiObject(new UiSelector().className(android.widget.ListView.class.getName()));
 		for(int i=2;i<listview.getChildCount();i++){
 			UiObject textView = listview.getChild(new UiSelector().clickable(true).index(i)).getChild(new UiSelector().className(android.widget.TextView.class.getName()));
-			Constant.WriteLog(Constant.info, "µÚ"+i+"ÌõµÄ±êÌâÎª      "+textView.getText().toString());
+			Constant.WriteLog(Constant.info, "ç¬¬"+i+"æ¡çš„æ ‡é¢˜ä¸º      "+textView.getText().toString());
 
-			//ÁĞ±íÖĞµÄËùÔÚÆµµÀ
+			//åˆ—è¡¨ä¸­çš„æ‰€åœ¨é¢‘é“
 			UiObject Channel = listview.getChild(new UiSelector().clickable(true).index(i).className(android.widget.LinearLayout.class.getName()));
 			textView = Channel.getChild(new UiSelector().index(0)).getChild(new UiSelector().index(0)).getChild(new UiSelector().index(1)).getChild(new UiSelector().index(0));
-			Constant.WriteLog(Constant.info, "µÚ"+i+"ÌõµÄÆµµÀÎª      "+textView.getText().toString());
+			Constant.WriteLog(Constant.info, "ç¬¬"+i+"æ¡çš„é¢‘é“ä¸º      "+textView.getText().toString());
 
-			//ÁĞ±íÖĞµÄËùÔÚÆµµÀ
+			//åˆ—è¡¨ä¸­çš„æ‰€åœ¨é¢‘é“
 			UiObject date = listview.getChild(new UiSelector().clickable(true).index(i).className(android.widget.LinearLayout.class.getName()));
 			textView = date.getChild(new UiSelector().index(0)).getChild(new UiSelector().index(0)).getChild(new UiSelector().index(1)).getChild(new UiSelector().index(1));
-			Constant.WriteLog(Constant.info, "µÚ"+i+"ÌõµÄÊ±¼äÎª      "+textView.getText().toString());
+			Constant.WriteLog(Constant.info, "ç¬¬"+i+"æ¡çš„æ—¶é—´ä¸º      "+textView.getText().toString());
 		}
 
 
@@ -116,27 +116,27 @@ public class Article extends UiAutomatorTestCase {
 
 
 	/**
-	 * ÊÕ²ØÎÄÕÂ
+	 * æ”¶è—æ–‡ç« 
 	 */
 	public void collectArticle(int index ){
 		try {
 			for(int i=0;i<2;i++){
 				if(i==1){
-					//ÔÙ´Î½øĞĞµãÔŞ²Ù×÷
-					Constant.WriteLog(Constant.info, "ÔÙ´Î½øĞĞÊÕ²Ø/È¡ÏûÊÕ²Ø²Ù×÷");
+					//å†æ¬¡è¿›è¡Œç‚¹èµæ“ä½œ
+					Constant.WriteLog(Constant.info, "å†æ¬¡è¿›è¡Œæ”¶è—/å–æ¶ˆæ”¶è—æ“ä½œ");
 				}
 
 				ArticalItem( index);
 				boolean isCollect = false;
-				//ÕÒµ½¸ü¶à°´Å¥
+				//æ‰¾åˆ°æ›´å¤šæŒ‰é’®
 				UiCollection resultspage=new UiCollection(new UiSelector().className(android.widget.LinearLayout.class.getName()));
 				UiObject resultLayout=resultspage.getChildByInstance(new UiSelector().className(android.widget.LinearLayout.class.getName()), 2);
 				UiObject fantile=resultLayout.getChild(new UiSelector().className("android.widget.ImageView").index(4)); 
 				fantile.click();
 
-				//ÅĞ¶Ïµ±Ç°ÎªÈ¡ÏûÊÕ²Ø»¹ÊÇÊÕ²Ø°´Å¥
+				//åˆ¤æ–­å½“å‰ä¸ºå–æ¶ˆæ”¶è—è¿˜æ˜¯æ”¶è—æŒ‰é’®
 				UiObject collectArticle =  new UiObject(new UiSelector().className("android.widget.TextView"));
-				if(collectArticle.getText().toString().equals("È¡ÏûÊÕ²Ø")){
+				if(collectArticle.getText().toString().equals("å–æ¶ˆæ”¶è—")){
 					isCollect = true;
 				}else{
 					isCollect = false;
@@ -145,19 +145,19 @@ public class Article extends UiAutomatorTestCase {
 
 				UiObject loginTip = new UiObject(new UiSelector().text(Constant.noLoginTip)); 
 				if(loginTip.exists()){
-					Constant.WriteLog(Constant.info, "µ±Ç°ÎªÎ´µÇÂ¼×´Ì¬£¬½øĞĞµÇÂ¼²Ù×÷");
+					Constant.WriteLog(Constant.info, "å½“å‰ä¸ºæœªç™»å½•çŠ¶æ€ï¼Œè¿›è¡Œç™»å½•æ“ä½œ");
 					DialogLoginOn();
 					collectArticle(index);
 					break;
 				}else{
 
 					if(isCollect){
-						Constant.WriteLog(Constant.info, "µ±Ç°ÎÄÕÂÎªÒÑÊÕ²Ø×´Ì¬£¬½øĞĞÈ¡ÏûÊÕ²Ø²Ù×÷");
+						Constant.WriteLog(Constant.info, "å½“å‰æ–‡ç« ä¸ºå·²æ”¶è—çŠ¶æ€ï¼Œè¿›è¡Œå–æ¶ˆæ”¶è—æ“ä½œ");
 					}else{
-						Constant.WriteLog(Constant.info, "µ±Ç°ÎÄÕÂÎªÎ´ÊÕ²Ø×´Ì¬,½øĞĞÊÕ²Ø²Ù×÷");
+						Constant.WriteLog(Constant.info, "å½“å‰æ–‡ç« ä¸ºæœªæ”¶è—çŠ¶æ€,è¿›è¡Œæ”¶è—æ“ä½œ");
 					}
 
-					//·µ»Øµ½ÎÄÕÂÁĞ±í
+					//è¿”å›åˆ°æ–‡ç« åˆ—è¡¨
 					test.uidevice.pressBack();
 					test.uidevice.pressBack();
 
@@ -173,19 +173,19 @@ public class Article extends UiAutomatorTestCase {
 						try {
 							UiObject textview = new UiObject(new UiSelector().text(articleString));
 							if(textview.exists()){
-								Constant.WriteLog(Constant.fail, "ÎÄÕÂÈ¡ÏûÊÕ²ØÊ§°Ü");
+								Constant.WriteLog(Constant.fail, "æ–‡ç« å–æ¶ˆæ”¶è—å¤±è´¥");
 							}else{
-								Constant.WriteLog(Constant.info, "ÎÄÕÂÒÑÈ¡ÏûÊÕ²Ø");
+								Constant.WriteLog(Constant.info, "æ–‡ç« å·²å–æ¶ˆæ”¶è—");
 							}
 						} catch (Exception e) {
-							Constant.WriteLog(Constant.info, "ÎÄÕÂÒÑÈ¡ÏûÊÕ²Ø");
+							Constant.WriteLog(Constant.info, "æ–‡ç« å·²å–æ¶ˆæ”¶è—");
 						}
 					}else{
 						try {
 							new UiObject(new UiSelector().text(articleString));
-							Constant.WriteLog(Constant.info, "ÎÄÕÂÊÕ²Ø³É¹¦");
+							Constant.WriteLog(Constant.info, "æ–‡ç« æ”¶è—æˆåŠŸ");
 						} catch (Exception e) {
-							Constant.WriteLog(Constant.fail, "ÎÄÕÂÊÕ²ØÊ§°Ü");
+							Constant.WriteLog(Constant.fail, "æ–‡ç« æ”¶è—å¤±è´¥");
 						}
 					}
 				}
@@ -206,19 +206,19 @@ public class Article extends UiAutomatorTestCase {
 
 
 	/**
-	 * ÎÄÕÂËÑË÷
+	 * æ–‡ç« æœç´¢
 	 * @param 
 	 * @return
 	 */
 
 	public void searchArticle(){
-		//ÕÒµ½¸ü¶à°´Å¥
+		//æ‰¾åˆ°æ›´å¤šæŒ‰é’®
 		try {
 			UiObject article = new UiObject(new UiSelector().text(Constant.article)); 
 			article.click();
 
 			/**
-			 * µã»÷ËÑË÷°´Å¥
+			 * ç‚¹å‡»æœç´¢æŒ‰é’®
 			 */
 			UiCollection toolBarPage=new UiCollection(new UiSelector().className(android.widget.LinearLayout.class.getName()));
 			UiObject resultLayout;
@@ -234,8 +234,8 @@ public class Article extends UiAutomatorTestCase {
 
 
 	/**
-	 * ÎÄÕÂµãÔŞÒÔ¼°È¡ÏûµãÔŞ
-	 * @param  ÎÄÕÂµÄË÷ÒıÖµ
+	 * æ–‡ç« ç‚¹èµä»¥åŠå–æ¶ˆç‚¹èµ
+	 * @param  æ–‡ç« çš„ç´¢å¼•å€¼
 	 * @return 
 	 */
 	public void ArticlePraise(int index){
@@ -244,40 +244,40 @@ public class Article extends UiAutomatorTestCase {
 		try {
 			for(int i=0;i<2;i++){
 				if(i==1){
-					//ÔÙ´Î½øĞĞµãÔŞ²Ù×÷
-					Constant.WriteLog(Constant.info, "ÔÙ´Î½øĞĞµãÔŞ²Ù×÷");
+					//å†æ¬¡è¿›è¡Œç‚¹èµæ“ä½œ
+					Constant.WriteLog(Constant.info, "å†æ¬¡è¿›è¡Œç‚¹èµæ“ä½œ");
 				}
 				int praiseBeforeNum = getAriticlePraise();
-				Constant.WriteLog(Constant.info, "µã»÷Ç°µãÔŞÊıÎª£º"+praiseBeforeNum);
-				//ÕÒµ½µãÔŞ°´Å¥
+				Constant.WriteLog(Constant.info, "ç‚¹å‡»å‰ç‚¹èµæ•°ä¸ºï¼š"+praiseBeforeNum);
+				//æ‰¾åˆ°ç‚¹èµæŒ‰é’®
 				UiCollection resultspage=new UiCollection(new UiSelector().className(android.widget.LinearLayout.class.getName()));
 				UiObject resultLayout=resultspage.getChildByInstance(new UiSelector().className(android.widget.LinearLayout.class.getName()), 3);
 				UiObject praise=resultLayout.getChild(new UiSelector().className("android.widget.ImageButton")); 
 				praise.click();
-				//ÅĞ¶ÏµãÔŞºóÊÇ·ñÌø×ªµ½ÁËµÇÂ¼½çÃæ
+				//åˆ¤æ–­ç‚¹èµåæ˜¯å¦è·³è½¬åˆ°äº†ç™»å½•ç•Œé¢
 
 				UiObject loginTip = new UiObject(new UiSelector().text(Constant.noLoginTip)); 
 				if(loginTip.exists()){
-					Constant.WriteLog(Constant.info, "µ±Ç°ÎªÎ´µÇÂ¼×´Ì¬£¬½øĞĞµÇÂ¼²Ù×÷");
+					Constant.WriteLog(Constant.info, "å½“å‰ä¸ºæœªç™»å½•çŠ¶æ€ï¼Œè¿›è¡Œç™»å½•æ“ä½œ");
 					DialogLoginOn();
 					ArticlePraise(index);
 					break;
 				}else{
 					int praiseAfterNum = getAriticlePraise();
-					Constant.WriteLog(Constant.info, "µã»÷ºóµãÔŞÊıÎª£º"+praiseAfterNum);
+					Constant.WriteLog(Constant.info, "ç‚¹å‡»åç‚¹èµæ•°ä¸ºï¼š"+praiseAfterNum);
 
 					if(praiseAfterNum-praiseBeforeNum==1){
-						Constant.WriteLog(Constant.info, "²Ù×÷ÎªµãÔŞ£¬µãÔŞÊı+1");
+						Constant.WriteLog(Constant.info, "æ“ä½œä¸ºç‚¹èµï¼Œç‚¹èµæ•°+1");
 					}else if(praiseBeforeNum-praiseAfterNum==1){
-						Constant.WriteLog(Constant.info, "²Ù×÷ÎªÈ¡ÏûµãÔŞ£¬µãÔŞÊı-1");
+						Constant.WriteLog(Constant.info, "æ“ä½œä¸ºå–æ¶ˆç‚¹èµï¼Œç‚¹èµæ•°-1");
 					}else{
-						Constant.WriteLog(Constant.fail, "µãÔŞ²Ù×÷Ê§°Ü");
+						Constant.WriteLog(Constant.fail, "ç‚¹èµæ“ä½œå¤±è´¥");
 					}
 
 
 				}
 				if(i==1){
-					//ÕÒµ½·µ»Ø°´Å¥
+					//æ‰¾åˆ°è¿”å›æŒ‰é’®
 					resultspage=new UiCollection(new UiSelector().className(android.widget.LinearLayout.class.getName()));
 					UiObject linearLayout=resultspage.getChildByInstance(new UiSelector().className(android.widget.LinearLayout.class.getName()), 2);
 					UiObject back =linearLayout.getChild(new UiSelector().className("android.widget.ImageView").index(0)); 
@@ -289,20 +289,20 @@ public class Article extends UiAutomatorTestCase {
 		} catch (UiObjectNotFoundException e) {
 
 			e.printStackTrace();
-			Constant.WriteLog(Constant.fail, "µãÔŞ²Ù×÷Ê§°Ü");
+			Constant.WriteLog(Constant.fail, "ç‚¹èµæ“ä½œå¤±è´¥");
 		}
 	}
 
 	/**
 	 * 
 	 * @param   
-	 * @return ·µ»ØÎÄÕÂµÄµãÔŞÊı
+	 * @return è¿”å›æ–‡ç« çš„ç‚¹èµæ•°
 	 */
 	public int getAriticlePraise(){
 
 		int praiseNum =0 ;
 		try {
-			//»ñÈ¡ÎÄÕÂµÄµãÔŞÊı
+			//è·å–æ–‡ç« çš„ç‚¹èµæ•°
 			UiCollection frameLayoutCollect=new UiCollection(new UiSelector().className(android.widget.FrameLayout.class.getName()));
 			UiObject frameLayoutPraise = frameLayoutCollect.getChildByInstance(new UiSelector().className(android.widget.FrameLayout.class.getName()), 4);
 			UiObject praiseTextView = frameLayoutPraise.getChild(new UiSelector().className("android.widget.TextView"));
@@ -319,7 +319,7 @@ public class Article extends UiAutomatorTestCase {
 
 
 	/**
-	 * ÎÄÕÂÆÀÂÛ¹¦ÄÜ
+	 * æ–‡ç« è¯„è®ºåŠŸèƒ½
 	 * @param  index
 	 * @return
 	 * @throws UiObjectNotFoundException 
@@ -328,7 +328,7 @@ public class Article extends UiAutomatorTestCase {
 	public void  ArticleComment(int index) throws UiObjectNotFoundException{
 		ArticalItem(index);
 
-		//ÕÒµ½ÆÀÂÛ°´Å¥
+		//æ‰¾åˆ°è¯„è®ºæŒ‰é’®
 		UiCollection resultspage=new UiCollection(new UiSelector().className(android.widget.LinearLayout.class.getName()));
 		UiObject resultLayout=resultspage.getChildByInstance(new UiSelector().className(android.widget.LinearLayout.class.getName()), 4);
 		UiObject comment=resultLayout.getChild(new UiSelector().className("android.widget.ImageButton")); 
@@ -336,74 +336,90 @@ public class Article extends UiAutomatorTestCase {
 
 
 
-		//µã»÷ÆÀÂÛ°´Å¥
+		//ç‚¹å‡»è¯„è®ºæŒ‰é’®
 		UiObject commentTextView = new UiObject(new UiSelector().text(Constant.comment));
 		commentTextView.clickAndWaitForNewWindow();
 
-		Constant.WriteLog(Constant.info, "²»ÌîĞ´ÄÚÈİ,·¢±í¿ÕµÄÆÀÂÛ");
-		//µã»÷·¢±í°´Å¥
+		Constant.WriteLog(Constant.info, "ä¸å¡«å†™å†…å®¹,å‘è¡¨ç©ºçš„è¯„è®º");
+		//ç‚¹å‡»å‘è¡¨æŒ‰é’®
 		UiObject publicTextView = new UiObject(new UiSelector().text(Constant.pubic));
 		publicTextView.click();
 
 		commentTextView = new UiObject(new UiSelector().text(Constant.comment));
 		if(commentTextView.exists()){
-			Constant.WriteLog(Constant.fail, "¿ÕÆÀÂÛ·¢±í³É¹¦");
+			Constant.WriteLog(Constant.fail, "ç©ºè¯„è®ºå‘è¡¨æˆåŠŸ");
 			return ;
 		}else{
-			Constant.WriteLog(Constant.info, "¿ÕÆÀÂÛ·¢±íÊ§°Ü");
+			Constant.WriteLog(Constant.info, "ç©ºè¯„è®ºå‘è¡¨å¤±è´¥");
 		}
 
-		Constant.WriteLog(Constant.info, "ÌîĞ´ÄÚÈİ³¬¹ı140¸ö×Ö·û");
+		Constant.WriteLog(Constant.info, "å¡«å†™å†…å®¹è¶…è¿‡140ä¸ªå­—ç¬¦");
 		UiObject commentEditText = new UiObject(new UiSelector().text(Constant.saySomething));
 		commentEditText.setText(Constant.longString);
 		publicTextView = new UiObject(new UiSelector().text(Constant.pubic));
 		if(!publicTextView.isClickable()){
-			Constant.WriteLog(Constant.info, "ÌîĞ´ÄÚÈİ³¬¹ı140¸ö×Ö·ûÊ±£¬·¢±í°´Å¥±ä»Ò");
+			Constant.WriteLog(Constant.info, "å¡«å†™å†…å®¹è¶…è¿‡140ä¸ªå­—ç¬¦æ—¶ï¼Œå‘è¡¨æŒ‰é’®å˜ç°");
 		}else{
-			Constant.WriteLog(Constant.info, "ÌîĞ´ÄÚÈİ³¬¹ı140¸ö×Ö·ûÊ±£¬·¢±í°´Å¥Î´±ä³É»ÒÉ«");
+			Constant.WriteLog(Constant.info, "å¡«å†™å†…å®¹è¶…è¿‡140ä¸ªå­—ç¬¦æ—¶ï¼Œå‘è¡¨æŒ‰é’®æœªå˜æˆç°è‰²");
 		}
-		
-		
-		Constant.WriteLog(Constant.info, "ÌîĞ´ÄÚÈİ\"good\"");
+
+
+		Constant.WriteLog(Constant.info, "å¡«å†™å†…å®¹\"good\"");
 
 		commentEditText = new UiObject(new UiSelector().text(Constant.longString));
 		commentEditText.clearTextField();
 		commentEditText = new UiObject(new UiSelector().text(Constant.saySomething));
 		commentEditText.setText("good");
 
-		//»ñÈ¡ÊäÈëÄÚÈİºó£¬ÔÊĞí×Ö·ûÊ£Óà¶àÉÙ
+		//è·å–è¾“å…¥å†…å®¹åï¼Œå…è®¸å­—ç¬¦å‰©ä½™å¤šå°‘
 		resultspage=new UiCollection(new UiSelector().className(android.widget.LinearLayout.class.getName()));
 		resultLayout=resultspage.getChildByInstance(new UiSelector().className(android.widget.LinearLayout.class.getName()), 4);
 		UiObject limitNum =resultLayout.getChild(new UiSelector().className(android.widget.TextView.class.getName()));
 		int changNum = Integer.valueOf(limitNum.getText().toString()).intValue();
-		Constant.WriteLog(Constant.info, "Ê£Óà×ÖÊıÎª"+changNum);
+		Constant.WriteLog(Constant.info, "å‰©ä½™å­—æ•°ä¸º"+changNum);
 		if(TOTALNUM-changNum==4){
-			Constant.WriteLog(Constant.info, "·ûºÏ×ÖÊı±ä»¯¹æÔò");
+			Constant.WriteLog(Constant.info, "ç¬¦åˆå­—æ•°å˜åŒ–è§„åˆ™");
 		}else{
-			Constant.WriteLog(Constant.fail, "²»·ûºÏ×ÖÊı±ä»¯¹æÔò");
+			Constant.WriteLog(Constant.fail, "ä¸ç¬¦åˆå­—æ•°å˜åŒ–è§„åˆ™");
 			return ;
 		}
-		//µã»÷·¢±í
+		//ç‚¹å‡»å‘è¡¨
 		publicTextView.click();
 
-		//»ñÈ¡µÚÒ»¸öÆÀÂÛµÄÄÚÈİ
+		//è·å–ç¬¬ä¸€ä¸ªè¯„è®ºçš„å†…å®¹,è¿™é‡Œå¤šä¸ªåˆ¤æ–­æ˜¯ç”±äºå¯èƒ½ç”¨æˆ·æ˜¯æœªå¡«å†™å­¦æ ¡çš„æƒ…å†µ
 		UiObject listview = new UiObject(new UiSelector().className("android.widget.ListView"));
-		UiObject Channel = listview.getChild(new UiSelector().index(1));
-		UiObject content = Channel.getChild(new UiSelector().className(android.widget.TextView.class.getName()).instance(3));
-		Constant.WriteLog(Constant.info, "ÁĞ±íµÚÒ»ÌõÆÀÂÛÎª"+content.getText().toString()); 
+		UiObject commentDetail = listview.getChild(new UiSelector().index(1));
+		UiObject content = commentDetail.getChild(new UiSelector().className(android.widget.TextView.class.getName()).instance(3));
+		Constant.WriteLog(Constant.info, "åˆ—è¡¨ç¬¬ä¸€æ¡è¯„è®ºä¸º"+content.getText().toString()); 
 		if(content.getText().toString().equals("good")){
-			Constant.WriteLog(Constant.info, "Óë·¢±íµÄÆÀÂÛÄÚÈİÏàÍ¬£¬ÆÀÂÛ·¢±í³É¹¦"); 
+			Constant.WriteLog(Constant.info, "ä¸å‘è¡¨çš„è¯„è®ºå†…å®¹ç›¸åŒï¼Œè¯„è®ºå‘è¡¨æˆåŠŸ"); 
 		}else{
-			Constant.WriteLog(Constant.fail, "Óë·¢±íµÄÆÀÂÛÄÚÈİ²»ÏàÍ¬£¬ÆÀÂÛ·¢±íÊ§°Ü"); 
+			content = commentDetail.getChild(new UiSelector().className(android.widget.TextView.class.getName()).instance(2));
+			if(content.getText().toString().equals("good")){
+				Constant.WriteLog(Constant.info, "ä¸å‘è¡¨çš„è¯„è®ºå†…å®¹ç›¸åŒï¼Œè¯„è®ºå‘è¡¨æˆåŠŸ"); 
+			}else{
+				Constant.WriteLog(Constant.fail, "ä¸å‘è¡¨çš„è¯„è®ºå†…å®¹ä¸ç›¸åŒï¼Œè¯„è®ºå‘è¡¨å¤±è´¥"); 
+			}
+
 		}
 
+		//è¿”å›è‡³ä¸»ç•Œé¢
+
+		UiCollection relativelayoutCollect=new UiCollection(new UiSelector().className(android.widget.RelativeLayout.class.getName()));
+		UiObject relativityLayout=relativelayoutCollect.getChildByInstance(new UiSelector().className(android.widget.RelativeLayout.class.getName()), 1);
+		UiObject back=relativityLayout.getChild(new UiSelector().className(android.widget.ImageView.class.getName())); 
+		back.click();
+		resultspage=new UiCollection(new UiSelector().className(android.widget.LinearLayout.class.getName()));
+		UiObject linearLayout=resultspage.getChildByInstance(new UiSelector().className(android.widget.LinearLayout.class.getName()), 2);
+		back =linearLayout.getChild(new UiSelector().className("android.widget.ImageView").index(0)); 
+		back.click();
 
 	}
 
 
 
 	/**
-	 * »ñÈ¡ÆÀÂÛ¸öÊı
+	 * è·å–è¯„è®ºä¸ªæ•°
 	 * @param 
 	 * @return
 	 */
@@ -415,4 +431,36 @@ public class Article extends UiAutomatorTestCase {
 		commentNum = Integer.valueOf(commentTextView.getText().toString()).intValue();
 		return commentNum;
 	}
+
+
+/**
+ * æ–‡ç« è¯„è®ºç‚¹èµ
+ * @param 
+ * @return
+ */
+	public void ArticleCommentPraise(int index) throws UiObjectNotFoundException {
+		ArticalItem(index);
+
+		//æ‰¾åˆ°è¯„è®ºæŒ‰é’®
+		UiCollection resultspage=new UiCollection(new UiSelector().className(android.widget.LinearLayout.class.getName()));
+		UiObject resultLayout=resultspage.getChildByInstance(new UiSelector().className(android.widget.LinearLayout.class.getName()), 4);
+		UiObject comment=resultLayout.getChild(new UiSelector().className("android.widget.ImageButton")); 
+		comment.clickAndWaitForNewWindow();
+
+		//éœ€è¦æ–°å¢ä¸€ä¸ªåˆ¤æ–­è‹¥è¯¥childcountä¸º4åˆ™ä¸ºç›´æ¥è¯„è®ºè‹¥ä¸º5åˆ™ä¸ºå¼•ç”¨ä»–äººå†è¯„è®º
+		UiObject listview = new UiObject(new UiSelector().className("android.widget.ListView"));
+		UiObject commentDetail = listview.getChild(new UiSelector().index(1));
+		UiObject praiseNum = commentDetail.getChild(new UiSelector().index(commentDetail.getChildCount()-2)).getChild(new UiSelector().index(0));
+		int beginPraiseNum = Integer.valueOf(praiseNum.getText().toString()).intValue();
+		Constant.WriteLog(Constant.info, "ç‚¹å‡»å‰çš„ç‚¹èµæ•°ä¸º"+beginPraiseNum);
+		praiseNum.click();
+		int endPraiseNum = Integer.valueOf(praiseNum.getText().toString()).intValue();
+		Constant.WriteLog(Constant.info, "ç‚¹å‡»åçš„ç‚¹èµæ•°ä¸º"+endPraiseNum);
+		if(endPraiseNum-beginPraiseNum==1){
+			//Constant.WriteLog(Constant.info, ""+endPraiseNum);
+		}
+		
+	}
+	
+	
 }

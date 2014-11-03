@@ -5,25 +5,25 @@ import java.util.Date;
 
 public class Constant {
 
-	public static String my = "ÎÒµÄ";
+	public static String my = "æˆ‘çš„";
 	
-	public static String myColect = "ÎÒµÄÊÕ²Ø";
+	public static String myColect = "æˆ‘çš„æ”¶è—";
 	
-	public static String article = "ÎÄÕÂ";
+	public static String article = "æ–‡ç« ";
 	
-	public static String noLoginTip = "Äã»¹Ã»ÓĞµÇÂ¼Å¶";
+	public static String noLoginTip = "ä½ è¿˜æ²¡æœ‰ç™»å½•å“¦";
 	
-	public static String mailLogin = "ÓÊÏäµÇÂ¼";
+	public static String mailLogin = "é‚®ç®±ç™»å½•";
 	
-	public static String comment = "ÆÀÂÛ";
+	public static String comment = "è¯„è®º";
 	
-	public static String pubic = "·¢±í";
+	public static String pubic = "å‘è¡¨";
 	
-	public static String saySomething = "ËµµãÉ¶";
+	public static String saySomething = "è¯´ç‚¹å•¥";
 	
 	public static String longString = "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
 	/**
-	 * log µÈ¼¶
+	 * log ç­‰çº§
 	 */
 	public static String info = "INFO";
 	public static String warn = "WARNING";
@@ -32,8 +32,8 @@ public class Constant {
 	
 	public static void WriteLog(String Level,String str){
 		
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//ÉèÖÃÈÕÆÚ¸ñÊ½
-		// new Date()Îª»ñÈ¡µ±Ç°ÏµÍ³Ê±¼ä
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//è®¾ç½®æ—¥æœŸæ ¼å¼
+		// new Date()ä¸ºè·å–å½“å‰ç³»ç»Ÿæ—¶é—´
 		
 		System.out.println(df.format(new Date())+":"+Level+"------"+str);
 	}
