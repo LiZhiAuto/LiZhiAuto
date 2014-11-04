@@ -1,3 +1,4 @@
+
 package com.cvte.lizhi;
 
 import com.android.uiautomator.core.UiCollection;
@@ -362,8 +363,8 @@ public class Article extends UiAutomatorTestCase {
 		}else{
 			Constant.WriteLog(Constant.info, "填写内容超过140个字符时，发表按钮未变成灰色");
 		}
-		
-		
+
+
 		Constant.WriteLog(Constant.info, "填写内容\"good\"");
 
 		commentEditText = new UiObject(new UiSelector().text(Constant.longString));
@@ -386,17 +387,34 @@ public class Article extends UiAutomatorTestCase {
 		//点击发表
 		publicTextView.click();
 
-		//获取第一个评论的内容
+		//获取第一个评论的内容,这里多个判断是由于可能用户是未填写学校的情况
 		UiObject listview = new UiObject(new UiSelector().className("android.widget.ListView"));
-		UiObject Channel = listview.getChild(new UiSelector().index(1));
-		UiObject content = Channel.getChild(new UiSelector().className(android.widget.TextView.class.getName()).instance(3));
+		UiObject commentDetail = listview.getChild(new UiSelector().index(1));
+		UiObject content = commentDetail.getChild(new UiSelector().className(android.widget.TextView.class.getName()).instance(3));
 		Constant.WriteLog(Constant.info, "列表第一条评论为"+content.getText().toString()); 
 		if(content.getText().toString().equals("good")){
 			Constant.WriteLog(Constant.info, "与发表的评论内容相同，评论发表成功"); 
 		}else{
-			Constant.WriteLog(Constant.fail, "与发表的评论内容不相同，评论发表失败"); 
+			content = commentDetail.getChild(new UiSelector().className(android.widget.TextView.class.getName()).instance(2));
+			if(content.getText().toString().equals("good")){
+				Constant.WriteLog(Constant.info, "与发表的评论内容相同，评论发表成功"); 
+			}else{
+				Constant.WriteLog(Constant.fail, "与发表的评论内容不相同，评论发表失败");
+				
+			}
+
 		}
 
+		//返回至主界面
+
+		UiCollection relativelayoutCollect=new UiCollection(new UiSelector().className(android.widget.RelativeLayout.class.getName()));
+		UiObject relativityLayout=relativelayoutCollect.getChildByInstance(new UiSelector().className(android.widget.RelativeLayout.class.getName()), 1);
+		UiObject back=relativityLayout.getChild(new UiSelector().className(android.widget.ImageView.class.getName())); 
+		back.click();
+		resultspage=new UiCollection(new UiSelector().className(android.widget.LinearLayout.class.getName()));
+		UiObject linearLayout=resultspage.getChildByInstance(new UiSelector().className(android.widget.LinearLayout.class.getName()), 2);
+		back =linearLayout.getChild(new UiSelector().className("android.widget.ImageView").index(0)); 
+		back.click();
 
 	}
 
@@ -415,4 +433,98 @@ public class Article extends UiAutomatorTestCase {
 		commentNum = Integer.valueOf(commentTextView.getText().toString()).intValue();
 		return commentNum;
 	}
+
+
+	/**
+	 * 文章评论点赞取消点赞
+	 * @param 
+	 * @return
+	 */
+	public void ArticleCommentPraise(int index) throws UiObjectNotFoundException {
+		ArticalItem(index);
+
+		//找到评论按钮
+		UiCollection resultspage=new UiCollection(new UiSelector().className(android.widget.LinearLayout.class.getName()));
+		UiObject resultLayout=resultspage.getChildByInstance(new UiSelector().className(android.widget.LinearLayout.class.getName()), 4);
+		UiObject comment=resultLayout.getChild(new UiSelector().className("android.widget.ImageButton")); 
+		comment.clickAndWaitForNewWindow();
+		Constant.WriteLog(Constant.info, "进入文章评论页面,对第一条评论进行点赞操作");
+
+		for(int i=0;i<2;i++){
+			if(i==1){
+				Constant.WriteLog(Constant.info, "再次进行点赞操作");
+			}
+			UiObject listview = new UiObject(new UiSelector().className("android.widget.ListView"));
+			UiObject commentDetail = listview.getChild(new UiSelector().index(1));
+			UiObject praiseNum = commentDetail.getChild(new UiSelector().index(commentDetail.getChildCount()-2)).getChild(new UiSelector().index(0));
+		
+			
+			int beginPraiseNum = Integer.valueOf(praiseNum.getText().toString()).intValue();
+			Constant.WriteLog(Constant.info, "点击前的点赞数为"+beginPraiseNum);
+			praiseNum.click();
+			//判断点赞后是否跳转到了登录界面
+
+			UiObject loginTip = new UiObject(new UiSelector().text(Constant.noLoginTip)); 
+			if(loginTip.exists()){
+				Constant.WriteLog(Constant.info, "当前为未登录状态，进行登录操作");
+				DialogLoginOn();
+				ArticleCommentPraise(index);
+				break;
+			}else{
+				int endPraiseNum = Integer.valueOf(praiseNum.getText().toString()).intValue();
+				Constant.WriteLog(Constant.info, "点击后的点赞数为"+endPraiseNum);
+				if(endPraiseNum-beginPraiseNum==1){
+					Constant.WriteLog(Constant.info, "点赞数+1，为点赞操作");
+				}else if(endPraiseNum-beginPraiseNum==-1){
+					Constant.WriteLog(Constant.info, "点赞数-1，为取消点赞操作");
+				}else {
+					Constant.WriteLog(Constant.fail, "点赞操作失败");
+				}
+			}
+			
+			
+			if(i==1){
+				//找到主界面
+				UiCollection relativelayoutCollect=new UiCollection(new UiSelector().className(android.widget.RelativeLayout.class.getName()));
+				UiObject relativityLayout=relativelayoutCollect.getChildByInstance(new UiSelector().className(android.widget.RelativeLayout.class.getName()), 1);
+				UiObject back=relativityLayout.getChild(new UiSelector().className(android.widget.ImageView.class.getName())); 
+				back.click();
+				resultspage=new UiCollection(new UiSelector().className(android.widget.LinearLayout.class.getName()));
+				UiObject linearLayout=resultspage.getChildByInstance(new UiSelector().className(android.widget.LinearLayout.class.getName()), 2);
+				back =linearLayout.getChild(new UiSelector().className("android.widget.ImageView").index(0)); 
+				back.click();
+
+			}
+			
+		}
+	}
+	
+	
+	public void ArticleCommentOtherComment(int index) throws UiObjectNotFoundException{
+		ArticalItem(index);
+		
+		//找到评论按钮
+		UiCollection resultspage=new UiCollection(new UiSelector().className(android.widget.LinearLayout.class.getName()));
+		UiObject resultLayout=resultspage.getChildByInstance(new UiSelector().className(android.widget.LinearLayout.class.getName()), 4);
+		UiObject comment=resultLayout.getChild(new UiSelector().className("android.widget.ImageButton")); 
+		comment.clickAndWaitForNewWindow();
+		Constant.WriteLog(Constant.info, "进入文章评论页面,对第一条评论进行评论操作");
+		
+		//找到评论按钮
+		UiObject listview = new UiObject(new UiSelector().className("android.widget.ListView"));
+		UiObject commentDetail = listview.getChild(new UiSelector().index(1));
+		UiObject commentImageView = commentDetail.getChild(new UiSelector().index(commentDetail.getChildCount()-2)).getChild(new UiSelector().index(0));
+		commentImageView.clickAndWaitForNewWindow();
+		
+	}
+
+
+	
+	
+	
+	
+	
+	
+
+
 }

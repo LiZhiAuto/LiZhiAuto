@@ -37,5 +37,6 @@ public class Constant {
 		
 		System.out.println(df.format(new Date())+":"+Level+"------"+str);
 	}
-	
+
 }
+
