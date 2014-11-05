@@ -52,10 +52,10 @@ public class test extends UiAutomatorTestCase {
 //				
 //				article.collectArticle(INDEX);
 
-		//System.out.println("-----------文章评论功能验证-----------");
-		//article.ArticleComment(INDEX);
-		System.out.println("-----------文章评论点赞功能验证-----------");
-		article.ArticleCommentPraise(INDEX);
+		System.out.println("-----------文章评论功能验证-----------");
+		article.searchArticle();
+//		System.out.println("-----------文章评论点赞功能验证-----------");
+//		article.ArticleCommentPraise(INDEX);
 	}
 
 	/***

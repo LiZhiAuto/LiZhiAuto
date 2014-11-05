@@ -22,6 +22,9 @@ public class Constant {
 	public static String saySomething = "说点啥";
 	
 	public static String longString = "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
+	
+	public static String clearSearch = "清除搜索历史";
+	
 	/**
 	 * log 等级
 	 */
