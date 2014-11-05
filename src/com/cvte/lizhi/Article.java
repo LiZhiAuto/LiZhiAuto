@@ -207,28 +207,141 @@ public class Article extends UiAutomatorTestCase {
 
 
 	/**
+
 	 * 文章搜索
+
 	 * @param 
+
 	 * @return
+
 	 */
 
+
+
 	public void searchArticle(){
+
 		//找到更多按钮
+
 		try {
+
 			UiObject article = new UiObject(new UiSelector().text(Constant.article)); 
+
 			article.click();
 
+
+
 			/**
+
 			 * 点击搜索按钮
+
 			 */
+
 			UiCollection toolBarPage=new UiCollection(new UiSelector().className(android.widget.LinearLayout.class.getName()));
+
 			UiObject resultLayout;
+
 			resultLayout = toolBarPage.getChildByInstance(new UiSelector().className(android.widget.LinearLayout.class.getName()), 3);
+
 			UiObject searchImage=resultLayout.getChild(new UiSelector().className("android.widget.ImageView").index(2)); 
+
 			searchImage.clickAndWaitForNewWindow();
+
+
+
+			//查找gridview 通过点击gridview中的内容 而不是查找文字的方式
+
+			UiObject gridView = new UiObject(new UiSelector().className(android.widget.GridView.class.getName()));
+
+			int count  = gridView.getChildCount();
+
+			Constant.WriteLog(Constant.info, count+" ");
+
+			for(int i=0;i<count;i++){
+
+				UiObject textView = gridView.getChild(new UiSelector().className(android.widget.TextView.class.getName()).instance(i));
+
+				String str = textView.getText().toString();
+
+				Constant.WriteLog(Constant.info, "点击\""+str+"\"进行文章搜索");
+
+				textView.click();
+
+				sleep(1000);
+
+
+				//查看listview
+
+				UiObject listView = new UiObject(new UiSelector().className(android.widget.ListView.class.getName()));
+
+				UiObject searchArticle = listView.getChild(new UiSelector().textContains(str));
+
+				if(searchArticle.exists()){
+
+					Constant.WriteLog(Constant.info, "成功搜索带有\""+str+"\"关键字的文章");
+
+				}else{
+
+					Constant.WriteLog(Constant.fail, "未搜索到\""+str+"\"关键字的文章");
+
+				}
+
+
+				//点击清除按钮
+
+				UiCollection linearLayoutCollect = new UiCollection(new UiSelector().className(android.widget.LinearLayout.class.getName()));
+
+				UiObject linearLayout=linearLayoutCollect.getChildByInstance(new UiSelector().className(android.widget.LinearLayout.class.getName()), 2);
+
+				UiObject clearText = linearLayout.getChild(new UiSelector().className(android.widget.ImageButton.class.getName()));
+
+				clearText.click();
+
+
+				//查看listview中是否有刚搜索的字
+
+				listView = new UiObject(new UiSelector().className(android.widget.ListView.class.getName()));
+
+				UiObject searchKey = listView.getChild(new UiSelector().text(str));
+
+				if(searchKey.exists()){
+
+					Constant.WriteLog(Constant.info, "历史搜索中新增\""+str+"\"关键字的搜索");
+
+				}else{
+
+					Constant.WriteLog(Constant.fail, "历史搜索中未新增\""+str+"\"关键字的搜索");
+
+				}
+
+			}
+
+			//点击清除搜索历史查看是否还存在listview
+
+			Constant.WriteLog(Constant.info, "点击清除搜索历史");
+
+			UiObject clearSearch = new UiObject(new UiSelector().text(Constant.clearSearch));
+
+			clearSearch.click();
+
+			UiObject listView = new UiObject(new UiSelector().className(android.widget.ListView.class.getName()));
+
+			if(listView.exists()){
+
+				Constant.WriteLog(Constant.fail, "清除搜索历史未成功");
+
+			}else{
+
+				Constant.WriteLog(Constant.info, "清除搜索历史成功");
+
+			}
+
 		} catch (UiObjectNotFoundException e) {
+
 			e.printStackTrace();
+
 		}
+
+
 
 	}
 
@@ -400,7 +513,7 @@ public class Article extends UiAutomatorTestCase {
 				Constant.WriteLog(Constant.info, "与发表的评论内容相同，评论发表成功"); 
 			}else{
 				Constant.WriteLog(Constant.fail, "与发表的评论内容不相同，评论发表失败");
-				
+
 			}
 
 		}
@@ -457,8 +570,8 @@ public class Article extends UiAutomatorTestCase {
 			UiObject listview = new UiObject(new UiSelector().className("android.widget.ListView"));
 			UiObject commentDetail = listview.getChild(new UiSelector().index(1));
 			UiObject praiseNum = commentDetail.getChild(new UiSelector().index(commentDetail.getChildCount()-2)).getChild(new UiSelector().index(0));
-		
-			
+
+
 			int beginPraiseNum = Integer.valueOf(praiseNum.getText().toString()).intValue();
 			Constant.WriteLog(Constant.info, "点击前的点赞数为"+beginPraiseNum);
 			praiseNum.click();
@@ -481,8 +594,8 @@ public class Article extends UiAutomatorTestCase {
 					Constant.WriteLog(Constant.fail, "点赞操作失败");
 				}
 			}
-			
-			
+
+
 			if(i==1){
 				//找到主界面
 				UiCollection relativelayoutCollect=new UiCollection(new UiSelector().className(android.widget.RelativeLayout.class.getName()));
@@ -495,36 +608,36 @@ public class Article extends UiAutomatorTestCase {
 				back.click();
 
 			}
-			
+
 		}
 	}
-	
-	
+
+
 	public void ArticleCommentOtherComment(int index) throws UiObjectNotFoundException{
 		ArticalItem(index);
-		
+
 		//找到评论按钮
 		UiCollection resultspage=new UiCollection(new UiSelector().className(android.widget.LinearLayout.class.getName()));
 		UiObject resultLayout=resultspage.getChildByInstance(new UiSelector().className(android.widget.LinearLayout.class.getName()), 4);
 		UiObject comment=resultLayout.getChild(new UiSelector().className("android.widget.ImageButton")); 
 		comment.clickAndWaitForNewWindow();
 		Constant.WriteLog(Constant.info, "进入文章评论页面,对第一条评论进行评论操作");
-		
+
 		//找到评论按钮
 		UiObject listview = new UiObject(new UiSelector().className("android.widget.ListView"));
 		UiObject commentDetail = listview.getChild(new UiSelector().index(1));
 		UiObject commentImageView = commentDetail.getChild(new UiSelector().index(commentDetail.getChildCount()-2)).getChild(new UiSelector().index(0));
 		commentImageView.clickAndWaitForNewWindow();
-		
+
 	}
 
 
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
 
 
 }
