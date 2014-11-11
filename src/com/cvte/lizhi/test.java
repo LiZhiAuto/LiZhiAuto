@@ -12,7 +12,7 @@ import com.android.uiautomator.testrunner.UiAutomatorTestCase;
 public class test extends UiAutomatorTestCase {   
 
 
-	public static int INDEX = 3;
+	public static int INDEX =4;
 	
 	public static UiDevice  uidevice ;
 
@@ -52,10 +52,13 @@ public class test extends UiAutomatorTestCase {
 //				
 //				article.collectArticle(INDEX);
 
-		//System.out.println("-----------文章评论功能验证-----------");
-		//article.ArticleComment(INDEX);
-		System.out.println("-----------文章评论点赞功能验证-----------");
-		article.ArticleCommentPraise(INDEX);
+//		System.out.println("-----------文章评论功能验证-----------");
+//		article.searchArticle();
+//		System.out.println("-----------文章评论点赞功能验证-----------");
+//		article.ArticleCommentPraise(INDEX);
+		
+		System.out.println("-----------评论文章的评论功能验证-----------");
+		article.ArticleCommentOtherComment(INDEX);
 	}
 
 	/***

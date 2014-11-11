@@ -23,8 +23,10 @@ public class Constant {
 	
 	public static String longString = "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
 	
+	public static String commentContent = "good";
+
 	public static String clearSearch = "清除历史搜索";
-	
+
 	/**
 	 * log 等级
 	 */
