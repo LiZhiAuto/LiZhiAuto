@@ -224,11 +224,15 @@ public class Article extends UiAutomatorTestCase {
 
 		try {
 
+
 			String str = "";
 			
+
 			UiObject article = new UiObject(new UiSelector().text(Constant.article)); 
 
 			article.click();
+
+
 
 			/**
 
@@ -382,7 +386,8 @@ public class Article extends UiAutomatorTestCase {
 
 			back.click();
 
-		} catch (UiObjectNotFoundException e) {
+
+		}catch (UiObjectNotFoundException e) {
 
 			e.printStackTrace();
 
@@ -428,9 +433,9 @@ public class Article extends UiAutomatorTestCase {
 					Constant.WriteLog(Constant.info, "点击后点赞数为："+praiseAfterNum);
 
 					if(praiseAfterNum-praiseBeforeNum==1){
-						Constant.WriteLog(Constant.info, "操作为点赞，点赞数+1");
+						Constant.WriteLog(Constant.info, "操作为点赞，点赞数加1");
 					}else if(praiseBeforeNum-praiseAfterNum==1){
-						Constant.WriteLog(Constant.info, "操作为取消点赞，点赞数-1");
+						Constant.WriteLog(Constant.info, "操作为取消点赞，点赞数减1");
 					}else{
 						Constant.WriteLog(Constant.fail, "点赞操作失败");
 					}
@@ -673,8 +678,118 @@ public class Article extends UiAutomatorTestCase {
 		//找到评论按钮
 		UiObject listview = new UiObject(new UiSelector().className("android.widget.ListView"));
 		UiObject commentDetail = listview.getChild(new UiSelector().index(1));
-		UiObject commentImageView = commentDetail.getChild(new UiSelector().index(commentDetail.getChildCount()-2)).getChild(new UiSelector().index(0));
-		commentImageView.clickAndWaitForNewWindow();
+		UiObject commentImageView = commentDetail.getChild(new UiSelector().index(commentDetail.getChildCount()-2)).getChild(new UiSelector().index(1));
+		
+		
+		//获取被评论人的姓名
+		UiObject commentedNameTV = commentDetail.getChild(new UiSelector().className(android.widget.TextView.class.getName()).instance(0));
+		String commentedName = commentedNameTV.getText();
+		//Constant.WriteLog(Constant.info, "被评论人的姓名为\""+commentedName+"\"");
+		UiObject commentedContentTV = null;  
+		//若单纯为用户评论，无引用他人评论时
+		if(commentDetail.getChildCount()==4){
+			commentedContentTV =commentDetail.getChild(new UiSelector().index(1).className(android.widget.TextView.class.getName()).instance(1));
+		}else{
+			commentedContentTV =commentDetail.getChild(new UiSelector().index(2).className(android.widget.TextView.class.getName()).instance(1));
+		}
+		
+		String commentedContent = commentedContentTV.getText(); 
+		
+		Constant.WriteLog(Constant.info, "对姓名为\""+commentedName+"\",内容为\""+commentedContent+"\"的评论进行评论");
+		listview = new UiObject(new UiSelector().className("android.widget.ListView"));
+		commentDetail = listview.getChild(new UiSelector().index(1));
+		UiObject commentOther = commentDetail.getChild(new UiSelector().index(commentDetail.getChildCount()-2)).getChild(new UiSelector().index(1));
+		commentOther.clickAndWaitForNewWindow();
+		
+		UiObject comparedUI = new UiObject(new UiSelector().textContains(commentedContent));
+		if(comparedUI.exists()){
+			comparedUI = new UiObject(new UiSelector().textContains(commentedName));
+			if(comparedUI.exists()){
+				Constant.WriteLog(Constant.info, "引用的评论内容以及评论人正确");
+			}else{
+				Constant.WriteLog(Constant.fail, "引用的评论人不正确");
+			}
+		}else{
+			Constant.WriteLog(Constant.fail, "引用的评论内容不正确");
+		}
+		
+		//评论相应内容点击发表
+		UiObject editText = new UiObject(new UiSelector().text(Constant.saySomething));
+		editText.setText(Constant.commentContent);
+		UiObject publicButton = new UiObject(new UiSelector().text(Constant.pubic));
+		publicButton.click();
+		
+		//比较第一条内容中评论内容是否为刚回复的内容
+		commentDetail = listview.getChild(new UiSelector().index(1));
+		UiObject commentContent =commentDetail.getChild(new UiSelector().index(2).className(android.widget.TextView.class.getName()).instance(1));
+		if(commentContent.exists()){
+			if(Constant.commentContent.equals(commentContent.getText())){
+				Constant.WriteLog(Constant.info, "发表评论后，评论内容与输入时一致");
+				commentedNameTV = commentDetail.getChild(new UiSelector().textContains("@"+commentedName));
+				if(commentedContentTV.exists()){
+					commentedContentTV = commentDetail.getChild(new UiSelector().textContains(commentedContent));
+					if(commentedContentTV.exists()){
+						Constant.WriteLog(Constant.info, "发表评论后，引用评论内容正确");
+					}else{
+						Constant.WriteLog(Constant.fail, "发表评论后，引用评论内容不正确");
+					}
+				}else{
+					Constant.WriteLog(Constant.fail, "发表评论后，引用评论名字不正确");
+				}
+			}else{
+				Constant.WriteLog(Constant.fail, "发表评论后，评论内容与输入时不一致");
+			}
+		}else{
+			Constant.WriteLog(Constant.fail, "发表评论后，评论内容与输入时不一致");
+		}
+		//返回至主界面
+		
+		UiCollection relativelayoutCollect=new UiCollection(new UiSelector().className(android.widget.RelativeLayout.class.getName()));
+		UiObject relativityLayout=relativelayoutCollect.getChildByInstance(new UiSelector().className(android.widget.RelativeLayout.class.getName()), 1);
+		UiObject back=relativityLayout.getChild(new UiSelector().className(android.widget.ImageView.class.getName())); 
+		back.click();
+		resultspage=new UiCollection(new UiSelector().className(android.widget.LinearLayout.class.getName()));
+		UiObject linearLayout=resultspage.getChildByInstance(new UiSelector().className(android.widget.LinearLayout.class.getName()), 2);
+		back =linearLayout.getChild(new UiSelector().className("android.widget.ImageView").index(0)); 
+		back.click();
+		
+		
+		
+
+				
+		
+		//获取第一个评论的内容,这里多个判断是由于可能用户是未填写学校的情况
+//		UiObject content = commentDetail.getChild(new UiSelector().className(android.widget.TextView.class.getName()).instance(3));
+//		Constant.WriteLog(Constant.info, "列表第一条评论为"+content.getText().toString()); 
+//		if(content.getText().toString().equals("good")){
+//			Constant.WriteLog(Constant.info, "与发表的评论内容相同，评论发表成功"); 
+//		}else{
+//			content = commentDetail.getChild(new UiSelector().className(android.widget.TextView.class.getName()).instance(2));
+//			if(content.getText().toString().equals("good")){
+//				Constant.WriteLog(Constant.info, "与发表的评论内容相同，评论发表成功"); 
+//			}else{
+//				Constant.WriteLog(Constant.fail, "与发表的评论内容不相同，评论发表失败");
+//
+//			}
+//
+//		}
+//
+//		
+//		commentImageView.clickAndWaitForNewWindow();
+//		
+//		
+//		
+//
+//		
+//		//评论相应内容点击发表
+//		UiObject editText = new UiObject(new UiSelector().text(Constant.saySomething));
+//		editText.setText(Constant.commentContent);
+//		UiObject publicButton = new UiObject(new UiSelector().text(Constant.pubic));
+		//publicButton.click();
+		
+		//重新进行查看是否有刚回复的信息
+		
+		
 
 	}
 

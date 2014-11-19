@@ -23,8 +23,24 @@ public class Constant {
 	
 	public static String longString = "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
 	
+	public static String commentContent = "good";
+
 	public static String clearSearch = "清除搜索历史";
 	
+	public static String mail = "邮箱";
+	
+	public static String account = "411249087@qq.com";
+	
+	public static String password = "123456";
+	
+	public static String male = "男";
+	
+	public static String female = "女";
+	
+	public static String sex = "性别";
+	
+	public static String nickName = "昵称";
+
 	/**
 	 * log 等级
 	 */
@@ -41,4 +57,8 @@ public class Constant {
 		System.out.println(df.format(new Date())+":"+Level+"------"+str);
 	}
 	
+	
+	
+	
+
 }

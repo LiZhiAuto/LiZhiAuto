@@ -12,11 +12,11 @@ import com.android.uiautomator.testrunner.UiAutomatorTestCase;
 public class test extends UiAutomatorTestCase {   
 
 
-	public static int INDEX = 3;
-	
+	public static int INDEX =4;
+
 	public static UiDevice  uidevice ;
 
-	
+
 	public void testDemo() throws UiObjectNotFoundException {   
 
 		// Simulate a short press on the HOME button.
@@ -37,25 +37,31 @@ public class test extends UiAutomatorTestCase {
 		UiObject settingsApp = appViews.getChildByText(
 				new UiSelector().className(android.widget.TextView.class.getName()), "立知");
 		settingsApp.clickAndWaitForNewWindow();
-
+		sleep(5000);
 		IsExistUpdate();
 		Article article = new Article();
-		//		System.out.println("-----------文章全部列表UI验证-----------");
-		//		ArticleUICheck();
-
-//				System.out.println("-----------文章点赞及取消点赞功能验证-----------");
-				
-//				article.ArticlePraise(INDEX);
-
-		
-//				System.out.println("-----------文章收藏以及取消收藏功能验证-----------");
-//				
-//				article.collectArticle(INDEX);
-
-		System.out.println("-----------文章评论功能验证-----------");
-		article.searchArticle();
+		My my = new My();
+//		System.out.println("-----------文章全部列表UI验证-----------");
+//		article.ArticleUICheck();
+//
+//		System.out.println("-----------文章点赞及取消点赞功能验证-----------");
+//
+//		article.ArticlePraise(INDEX);
+//
+//
+//		System.out.println("-----------文章收藏以及取消收藏功能验证-----------");
+//
+//		article.collectArticle(INDEX);
+//
+//		System.out.println("-----------文章搜索功能验证-----------");
+//		article.searchArticle();
 //		System.out.println("-----------文章评论点赞功能验证-----------");
 //		article.ArticleCommentPraise(INDEX);
+
+//		System.out.println("-----------评论文章的评论功能验证-----------");
+//		article.ArticleCommentOtherComment(INDEX);
+		
+		my.ModifyNickName();
 	}
 
 	/***
@@ -114,10 +120,10 @@ public class test extends UiAutomatorTestCase {
 
 	}
 
-	
 
 
-	
+
+
 
 
 
