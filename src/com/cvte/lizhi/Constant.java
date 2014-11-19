@@ -25,7 +25,13 @@ public class Constant {
 	
 	public static String commentContent = "good";
 
-	public static String clearSearch = "清除历史搜索";
+	public static String clearSearch = "清除搜索历史";
+	
+	public static String mail = "邮箱";
+	
+	public static String account = "411249087@qq.com";
+	
+	public static String password = "123456";
 
 	/**
 	 * log 等级
@@ -42,6 +48,10 @@ public class Constant {
 		
 		System.out.println(df.format(new Date())+":"+Level+"------"+str);
 	}
+	
+	
+	
+	
 
 }
 
