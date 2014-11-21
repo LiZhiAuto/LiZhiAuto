@@ -27,11 +27,29 @@ public class Constant {
 
 	public static String clearSearch = "清除搜索历史";
 	
+	public static String content = "正文";
+	
 	public static String mail = "邮箱";
+	
+	public static String post = "发帖";
+	
+	public static String selectFromAlbum = "从相册选择";
 	
 	public static String account = "411249087@qq.com";
 	
 	public static String password = "123456";
+	
+	public static String male = "男";
+	
+	public static String female = "女";
+	
+	public static String sex = "性别";
+	
+	public static String nickName = "昵称";
+	
+	public static String complete  = "完成";
+	
+	public static String editInfo = "编辑个人信息";
 
 	/**
 	 * log 等级

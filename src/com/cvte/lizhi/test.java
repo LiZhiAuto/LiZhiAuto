@@ -15,13 +15,17 @@ public class test extends UiAutomatorTestCase {
 	public static int INDEX =4;
 
 	public static UiDevice  uidevice ;
-
+	public static int width = 0;
+	public static int height = 0;
 
 	public void testDemo() throws UiObjectNotFoundException {   
 
 		// Simulate a short press on the HOME button.
 		// getUiDevice().pressHome();
 		uidevice = getUiDevice();
+		width = uidevice.getDisplayWidth();
+		height = uidevice.getDisplayHeight();
+		System.out.println(width+""+height);
 
 		getUiDevice().pressHome();
 		UiObject allAppsButton = new UiObject(new UiSelector().description("应用"));
@@ -37,7 +41,7 @@ public class test extends UiAutomatorTestCase {
 		UiObject settingsApp = appViews.getChildByText(
 				new UiSelector().className(android.widget.TextView.class.getName()), "立知");
 		settingsApp.clickAndWaitForNewWindow();
-		sleep(5000);
+		//sleep(300);
 		IsExistUpdate();
 		Article article = new Article();
 //		System.out.println("-----------文章全部列表UI验证-----------");
@@ -56,9 +60,13 @@ public class test extends UiAutomatorTestCase {
 //		article.searchArticle();
 //		System.out.println("-----------文章评论点赞功能验证-----------");
 //		article.ArticleCommentPraise(INDEX);
-
-		System.out.println("-----------评论文章的评论功能验证-----------");
-		article.ArticleCommentOtherComment(INDEX);
+//		System.out.println("-----------评论文章的评论功能验证-----------");
+//		article.ArticleCommentOtherComment(INDEX);
+		
+//		Forum forum = new Forum();
+//		forum.ForumPost();
+		My my = new My();
+		my.ModifyNickName();
 	}
 
 	/***
