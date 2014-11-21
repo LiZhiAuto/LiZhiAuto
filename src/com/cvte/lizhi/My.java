@@ -12,7 +12,7 @@ public class My extends UiAutomatorTestCase {
 	/**
 	 * 修改用户性别
 	 * @param 
-	 * @return
+	 * @returna
 	 */
 	public void ModifySex() throws UiObjectNotFoundException{
 
