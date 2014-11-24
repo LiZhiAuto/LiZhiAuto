@@ -108,4 +108,6 @@ public class Forum extends UiAutomatorTestCase {
 		
 	}
 
+
 }
+

@@ -8,6 +8,8 @@ public class Constant {
 	public static String my = "我的";
 	
 	public static String myColect = "我的收藏";
+
+	public static String messageCenter = "消息中心";
 	
 	public static String article = "文章";
 	
@@ -51,6 +53,18 @@ public class Constant {
 	
 	public static String editInfo = "编辑个人信息";
 
+	public static String headPortrait = "头像";
+	
+	public static String school = "学校";
+	
+	public static String city = "城市";
+	
+	public static String profession = "目标行业";
+	
+	public static String point = "积分";
+
+
+
 	/**
 	 * log 等级
 	 */
@@ -70,6 +84,11 @@ public class Constant {
 	
 	
 	
+
+
+
+
+
 
 }
 

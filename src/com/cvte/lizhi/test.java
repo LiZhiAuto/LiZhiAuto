@@ -40,33 +40,40 @@ public class test extends UiAutomatorTestCase {
 
 		UiObject settingsApp = appViews.getChildByText(
 				new UiSelector().className(android.widget.TextView.class.getName()), "立知");
+		
+	//	UiObject settingsApp = new UiObject(new UiSelector().text("立知"));
+		
 		settingsApp.clickAndWaitForNewWindow();
 		//sleep(300);
 		IsExistUpdate();
 		Article article = new Article();
-//		System.out.println("-----------文章全部列表UI验证-----------");
-//		article.ArticleUICheck();
-//
-//		System.out.println("-----------文章点赞及取消点赞功能验证-----------");
-//
-//		article.ArticlePraise(INDEX);
-//
-//
-//		System.out.println("-----------文章收藏以及取消收藏功能验证-----------");
-//
-//		article.collectArticle(INDEX);
-//
-//		System.out.println("-----------文章搜索功能验证-----------");
-//		article.searchArticle();
-//		System.out.println("-----------文章评论点赞功能验证-----------");
-//		article.ArticleCommentPraise(INDEX);
-//		System.out.println("-----------评论文章的评论功能验证-----------");
-//		article.ArticleCommentOtherComment(INDEX);
-		
-//		Forum forum = new Forum();
-//		forum.ForumPost();
 		My my = new My();
+		Constant.WriteLog(Constant.info,"-----------文章全部列表UI验证-----------");
+		article.ArticleUICheck();
+		Constant.WriteLog(Constant.info,"-----------文章点赞及取消点赞功能验证-----------");
+		article.ArticlePraise(INDEX);
+		Constant.WriteLog(Constant.info,"-----------文章收藏以及取消收藏功能验证-----------");
+		article.collectArticle(INDEX);
+		Constant.WriteLog(Constant.info,"-----------文章搜索功能验证-----------");
+		article.SearchArticle();
+		Constant.WriteLog(Constant.info,"-----------文章评论点赞功能验证-----------");
+		article.ArticleCommentPraise(INDEX);
+		Constant.WriteLog(Constant.info,"-----------文章评论功能验证-----------");
+		article.ArticleComment(INDEX);
+		Constant.WriteLog(Constant.info,"-----------评论文章的评论功能验证-----------");
+		article.ArticleCommentOtherComment(INDEX);
+		
+		Constant.WriteLog(Constant.info,"-----------我的页面界面验证-----------");
+		my.MyUICheck();
+		Constant.WriteLog(Constant.info,"-----------编辑个人信息界面验证-----------");	
+		my.EditMyInfoUICheck();
+		Constant.WriteLog(Constant.info,"-----------修改用户信息功能验证-----------");
 		my.ModifyNickName();
+		my.ModifySex();
+		my.ModifySchool();
+		my.modifyCity();
+		my.modifyProfession();
+		
 	}
 
 	/***
