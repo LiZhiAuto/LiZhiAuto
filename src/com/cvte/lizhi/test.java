@@ -12,7 +12,7 @@ import com.android.uiautomator.testrunner.UiAutomatorTestCase;
 public class test extends UiAutomatorTestCase {   
 
 
-	public static int INDEX =4;
+	public static int INDEX =3;
 
 	public static UiDevice  uidevice ;
 	public static int width = 0;
@@ -27,9 +27,9 @@ public class test extends UiAutomatorTestCase {
 		height = uidevice.getDisplayHeight();
 		System.out.println(width+""+height);
 
-		getUiDevice().pressHome();
-		UiObject allAppsButton = new UiObject(new UiSelector().description("应用"));
-		allAppsButton.clickAndWaitForNewWindow();
+//		getUiDevice().pressHome();
+//		UiObject allAppsButton = new UiObject(new UiSelector().description("应用"));
+//		allAppsButton.clickAndWaitForNewWindow();
 
 		// 然后在 Apps tab界面，模拟用户滑动到时钟应用的操作。
 		// 由于Apps界面是可以滚动的，所有用
@@ -40,8 +40,6 @@ public class test extends UiAutomatorTestCase {
 
 		UiObject settingsApp = appViews.getChildByText(
 				new UiSelector().className(android.widget.TextView.class.getName()), "立知");
-		
-	//	UiObject settingsApp = new UiObject(new UiSelector().text("立知"));
 		
 		settingsApp.clickAndWaitForNewWindow();
 		//sleep(300);

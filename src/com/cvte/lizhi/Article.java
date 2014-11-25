@@ -374,6 +374,24 @@ public class Article extends UiAutomatorTestCase {
 	public boolean HistorySearch() throws UiObjectNotFoundException{
 		//通过点击搜索历史的关键字进行查找
 		String str = "";
+		UiObject back = new UiObject(new UiSelector().className(android.widget.ImageView.class.getName()));
+		if(back.exists()){
+			back.click();
+		}
+		
+		/**
+		 * 点击搜索按钮
+		 */
+		UiCollection toolBarPage=new UiCollection(new UiSelector().className(android.widget.LinearLayout.class.getName()));
+
+		UiObject resultLayout;
+
+		resultLayout = toolBarPage.getChildByInstance(new UiSelector().className(android.widget.LinearLayout.class.getName()), 3);
+
+		UiObject searchImage=resultLayout.getChild(new UiSelector().className("android.widget.ImageView").index(2)); 
+
+		searchImage.clickAndWaitForNewWindow();
+		
 		UiObject listView = new UiObject(new UiSelector().className(android.widget.ListView.class.getName()));
 		if(listView.exists()){
 			UiObject  searchKey = listView.getChild(new UiSelector().className(android.widget.TextView.class.getName()).instance(1));
@@ -394,7 +412,7 @@ public class Article extends UiAutomatorTestCase {
 						//直接返回
 						UiCollection resultspage=new UiCollection(new UiSelector().className(android.widget.LinearLayout.class.getName()));
 						UiObject linearLayout=resultspage.getChildByInstance(new UiSelector().className(android.widget.LinearLayout.class.getName()), 2);
-						UiObject back =linearLayout.getChild(new UiSelector().className("android.widget.ImageView").index(0)); 
+						back =linearLayout.getChild(new UiSelector().className("android.widget.ImageView").index(0)); 
 						back.click();	
 						//点击清除按钮
 						UiCollection linearLayoutCollect = new UiCollection(new UiSelector().className(android.widget.LinearLayout.class.getName()));
@@ -575,18 +593,18 @@ public class Article extends UiAutomatorTestCase {
 		UiObject commentTextView = new UiObject(new UiSelector().text(Constant.comment));
 		commentTextView.clickAndWaitForNewWindow();
 
-		Constant.WriteLog(Constant.info, "不填写内容,发表空的评论");
-		//点击发表按钮
+//		Constant.WriteLog(Constant.info, "不填写内容,发表空的评论");
+//		//点击发表按钮
 		UiObject publicTextView = new UiObject(new UiSelector().text(Constant.pubic));
-		publicTextView.click();
-
-		commentTextView = new UiObject(new UiSelector().text(Constant.comment));
-		if(commentTextView.exists()){
-			Constant.WriteLog(Constant.fail, "空评论发表成功");
-			return ;
-		}else{
-			Constant.WriteLog(Constant.info, "空评论发表失败");
-		}
+//		publicTextView.click();
+//
+//		commentTextView = new UiObject(new UiSelector().text(Constant.comment));
+//		if(commentTextView.exists()){
+//			Constant.WriteLog(Constant.fail, "空评论发表成功");
+//			return ;
+//		}else{
+//			Constant.WriteLog(Constant.info, "空评论发表失败");
+//		}
 
 		Constant.WriteLog(Constant.info, "填写内容超过140个字符");
 		UiObject commentEditText = new UiObject(new UiSelector().className(android.widget.EditText.class.getName()));

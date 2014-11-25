@@ -166,6 +166,7 @@ public class My extends UiAutomatorTestCase {
 				Constant.WriteLog(Constant.fail, "设置学校失败");
 			}	
 		}
+		sleep(1000);
 		UiObject back = new UiObject(new UiSelector().className(android.widget.ImageView.class.getName()));
 		if(back.exists()){
 			back.click();
@@ -179,8 +180,8 @@ public class My extends UiAutomatorTestCase {
 	 */
 
 	public void modifyCity() throws UiObjectNotFoundException{
-		String searchCity = "福安";
-		String searchCityPY = "fa";
+		String searchCity = "哈尔滨";
+		String searchCityPY = "heb";
 		EnterMyPage();
 		//查找编辑个人信息按钮
 		UiObject EditInfo = new UiObject(new UiSelector().className(android.widget.ImageButton.class.getName()));
@@ -250,6 +251,10 @@ public class My extends UiAutomatorTestCase {
 			}else{
 				Constant.WriteLog(Constant.fail, "设置目标行业失败");
 			}	
+		}
+		UiObject back = new UiObject(new UiSelector().className(android.widget.ImageView.class.getName()));
+		if(back.exists()){
+			back.click();
 		}
 	}
 
