@@ -3,6 +3,10 @@ package com.cvte.lizhi;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.android.uiautomator.core.UiObject;
+import com.android.uiautomator.core.UiObjectNotFoundException;
+import com.android.uiautomator.core.UiSelector;
+
 public class Constant {
 
 	public static String my = "我的";
@@ -26,7 +30,11 @@ public class Constant {
 	public static String longString = "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
 	
 	public static String commentContent = "good";
+	
+	public static String hotSearch = "热门搜索";
 
+	public static String historySearch = "历史搜索";
+	
 	public static String clearSearch = "清除搜索历史";
 	
 	public static String content = "正文";
@@ -62,7 +70,14 @@ public class Constant {
 	public static String profession = "目标行业";
 	
 	public static String point = "积分";
+	
+	public static String share = "分享";
 
+	public static String createNewTalk = "创建新聊天";
+	
+	public static String confirm = "确定";
+	
+	public static String back = "返回";
 
 
 	/**
@@ -80,6 +95,8 @@ public class Constant {
 		
 		System.out.println(df.format(new Date())+":"+Level+"------"+str);
 	}
+	
+	
 	
 	
 	

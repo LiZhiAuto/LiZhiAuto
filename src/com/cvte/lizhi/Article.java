@@ -206,6 +206,65 @@ public class Article extends UiAutomatorTestCase {
 	}
 
 
+	public void SearchArticleUICheck() throws UiObjectNotFoundException{
+
+		UiObject article = new UiObject(new UiSelector().text(Constant.article)); 
+		article.click();
+		/**
+		 * 点击搜索按钮
+		 */
+		UiCollection toolBarPage=new UiCollection(new UiSelector().className(android.widget.LinearLayout.class.getName()));
+
+		UiObject resultLayout;
+
+		resultLayout = toolBarPage.getChildByInstance(new UiSelector().className(android.widget.LinearLayout.class.getName()), 3);
+
+		UiObject searchImage=resultLayout.getChild(new UiSelector().className("android.widget.ImageView").index(2)); 
+
+		searchImage.clickAndWaitForNewWindow();		
+
+		UiObject searchEdit = new UiObject(new UiSelector().className(android.widget.EditText.class.getName()));
+		if(searchEdit.exists()){
+			Constant.WriteLog(Constant.info, "界面存在有搜索框 ");
+			UiObject hotSearch = new UiObject(new UiSelector().text(Constant.hotSearch));
+			if(hotSearch.exists()){
+				Constant.WriteLog(Constant.info, "界面存在有热门搜索");
+				UiObject gridView = new UiObject(new UiSelector().className(android.widget.GridView.class.getName()));
+				if(gridView.exists()){
+					Constant.WriteLog(Constant.info, "热门搜索的关键字分别为:");
+					for(int i=0;i<gridView.getChildCount();i++){
+						UiObject textView = gridView.getChild(new UiSelector().className(android.widget.TextView.class.getName()).instance(i));
+						Constant.WriteLog(Constant.info,textView.getText().toString());
+					}
+					UiObject historySearch = new UiObject(new UiSelector().text(Constant.historySearch));
+					if(historySearch.exists()){
+						Constant.WriteLog(Constant.info, "界面存在有历史搜索");
+						UiObject clearSearch = new UiObject(new UiSelector().text(Constant.clearSearch));
+						if(clearSearch.exists()){
+							Constant.WriteLog(Constant.info, "界面存在有清除历史搜索");
+						}else{
+							Constant.WriteLog(Constant.fail, "界面不存在有清除历史搜索");
+						}
+					}else{
+						Constant.WriteLog(Constant.fail, "界面不存在有历史搜索");
+					}
+				}else{
+					Constant.WriteLog(Constant.fail, "界面不存在有热门搜索");
+				}
+
+			}
+		}else{
+			Constant.WriteLog(Constant.fail, "界面不存在有搜索框");
+		}
+
+		UiObject back = new UiObject(new UiSelector().className(android.widget.ImageView.class.getName()));
+		if(back.exists()){
+			back.click();
+		}
+
+	}
+
+
 	/**
 
 	 * 文章搜索
@@ -215,9 +274,6 @@ public class Article extends UiAutomatorTestCase {
 	 * @return
 
 	 */
-
-
-
 	public void SearchArticle(){
 
 		//找到更多按钮
@@ -378,7 +434,7 @@ public class Article extends UiAutomatorTestCase {
 		if(back.exists()){
 			back.click();
 		}
-		
+
 		/**
 		 * 点击搜索按钮
 		 */
@@ -391,7 +447,7 @@ public class Article extends UiAutomatorTestCase {
 		UiObject searchImage=resultLayout.getChild(new UiSelector().className("android.widget.ImageView").index(2)); 
 
 		searchImage.clickAndWaitForNewWindow();
-		
+
 		UiObject listView = new UiObject(new UiSelector().className(android.widget.ListView.class.getName()));
 		if(listView.exists()){
 			UiObject  searchKey = listView.getChild(new UiSelector().className(android.widget.TextView.class.getName()).instance(1));
@@ -424,7 +480,7 @@ public class Article extends UiAutomatorTestCase {
 							Constant.WriteLog(Constant.info, "历史搜索中关键字按搜索次数排序");
 							return true;
 						}else{
-						
+
 							Constant.WriteLog(Constant.fail, "历史搜索中关键字未按搜索次数排序"+str);
 							return false;
 						}	
@@ -550,9 +606,9 @@ public class Article extends UiAutomatorTestCase {
 		int praiseNum =0 ;
 		try {
 			//获取文章的点赞数
-//			UiCollection frameLayoutCollect=new UiCollection(new UiSelector().className(android.widget.FrameLayout.class.getName()));
-//			UiObject frameLayoutPraise = frameLayoutCollect.getChildByInstance(new UiSelector().className(android.widget.FrameLayout.class.getName()), 4);
-//			UiObject praiseTextView = frameLayoutPraise.getChild(new UiSelector().className("android.widget.TextView"));
+			//			UiCollection frameLayoutCollect=new UiCollection(new UiSelector().className(android.widget.FrameLayout.class.getName()));
+			//			UiObject frameLayoutPraise = frameLayoutCollect.getChildByInstance(new UiSelector().className(android.widget.FrameLayout.class.getName()), 4);
+			//			UiObject praiseTextView = frameLayoutPraise.getChild(new UiSelector().className("android.widget.TextView"));
 			UiObject praiseTextView = new UiObject(new UiSelector().className("android.widget.TextView"));
 			praiseNum = Integer.valueOf(praiseTextView.getText().toString()).intValue();
 
@@ -584,27 +640,27 @@ public class Article extends UiAutomatorTestCase {
 		if(commentNumTv.exists()){
 			Constant.WriteLog(Constant.info, "文章的评论数为"+commentNumTv.getText());
 		}
-	
+
 		comment.clickAndWaitForNewWindow();
-		
+
 
 
 		//点击评论按钮
 		UiObject commentTextView = new UiObject(new UiSelector().text(Constant.comment));
 		commentTextView.clickAndWaitForNewWindow();
 
-//		Constant.WriteLog(Constant.info, "不填写内容,发表空的评论");
-//		//点击发表按钮
+		Constant.WriteLog(Constant.info, "不填写内容,发表空的评论");
+		//点击发表按钮
 		UiObject publicTextView = new UiObject(new UiSelector().text(Constant.pubic));
-//		publicTextView.click();
-//
-//		commentTextView = new UiObject(new UiSelector().text(Constant.comment));
-//		if(commentTextView.exists()){
-//			Constant.WriteLog(Constant.fail, "空评论发表成功");
-//			return ;
-//		}else{
-//			Constant.WriteLog(Constant.info, "空评论发表失败");
-//		}
+		publicTextView.click();
+
+		commentTextView = new UiObject(new UiSelector().text(Constant.comment));
+		if(commentTextView.exists()){
+			Constant.WriteLog(Constant.fail, "空评论发表成功");
+			return ;
+		}else{
+			Constant.WriteLog(Constant.info, "空评论发表失败");
+		}
 
 		Constant.WriteLog(Constant.info, "填写内容超过140个字符");
 		UiObject commentEditText = new UiObject(new UiSelector().className(android.widget.EditText.class.getName()));
@@ -721,14 +777,26 @@ public class Article extends UiAutomatorTestCase {
 				break;
 			}else{
 				int endPraiseNum = Integer.valueOf(praiseNum.getText().toString()).intValue();
-				Constant.WriteLog(Constant.info, "点击后的点赞数为"+endPraiseNum);
+				Constant.WriteLog(Constant.info, "点击后的点赞数为"+endPraiseNum);	
 				if(endPraiseNum-beginPraiseNum==1){
 					Constant.WriteLog(Constant.info, "点赞数+1，为点赞操作");
+
 				}else if(endPraiseNum-beginPraiseNum==-1){
 					Constant.WriteLog(Constant.info, "点赞数-1，为取消点赞操作");
 				}else {
 					Constant.WriteLog(Constant.fail, "点赞操作失败");
 				}
+
+				//进行刷新操作
+				RefreshListView();
+				int refreshPraiseNum = Integer.valueOf(praiseNum.getText().toString()).intValue();
+				Constant.WriteLog(Constant.info, "刷新后的点赞数为"+refreshPraiseNum);
+				if(refreshPraiseNum==endPraiseNum){
+					Constant.WriteLog(Constant.info, "刷新后点赞数不变");
+				}else{
+					Constant.WriteLog(Constant.fail, "刷新后点赞数不一致");
+				}
+
 			}
 
 
@@ -749,6 +817,11 @@ public class Article extends UiAutomatorTestCase {
 	}
 
 
+	/**
+	 * 评论文章的评论功能
+	 * @param index
+	 * @throws UiObjectNotFoundException
+	 */
 	public void ArticleCommentOtherComment(int index) throws UiObjectNotFoundException{
 		ArticalItem(index);
 
@@ -762,7 +835,7 @@ public class Article extends UiAutomatorTestCase {
 		//找到评论按钮
 		UiObject listview = new UiObject(new UiSelector().className("android.widget.ListView"));
 		UiObject commentDetail = listview.getChild(new UiSelector().index(1));
-		UiObject commentImageView = commentDetail.getChild(new UiSelector().index(commentDetail.getChildCount()-2)).getChild(new UiSelector().index(1));
+		//UiObject commentImageView = commentDetail.getChild(new UiSelector().index(commentDetail.getChildCount()-2)).getChild(new UiSelector().index(1));
 
 
 		//获取被评论人的姓名
@@ -803,29 +876,11 @@ public class Article extends UiAutomatorTestCase {
 		UiObject publicButton = new UiObject(new UiSelector().text(Constant.pubic));
 		publicButton.click();
 
-		//比较第一条内容中评论内容是否为刚回复的内容
-		commentDetail = listview.getChild(new UiSelector().index(1));
-		UiObject commentContent =commentDetail.getChild(new UiSelector().index(2).className(android.widget.TextView.class.getName()).instance(1));
-		if(commentContent.exists()){
-			if(Constant.commentContent.equals(commentContent.getText())){
-				Constant.WriteLog(Constant.info, "发表评论后，评论内容与输入时一致");
-				commentedNameTV = commentDetail.getChild(new UiSelector().textContains("@"+commentedName));
-				if(commentedContentTV.exists()){
-					commentedContentTV = commentDetail.getChild(new UiSelector().textContains(commentedContent));
-					if(commentedContentTV.exists()){
-						Constant.WriteLog(Constant.info, "发表评论后，引用评论内容正确");
-					}else{
-						Constant.WriteLog(Constant.fail, "发表评论后，引用评论内容不正确");
-					}
-				}else{
-					Constant.WriteLog(Constant.fail, "发表评论后，引用评论名字不正确");
-				}
-			}else{
-				Constant.WriteLog(Constant.fail, "发表评论后，评论内容与输入时不一致");
-			}
-		}else{
-			Constant.WriteLog(Constant.fail, "发表评论后，评论内容与输入时不一致");
+		if(isCommentOtherCommentSuccess(commentedName, commentedContent, Constant.pubic)){
+			RefreshListView();
+			isCommentOtherCommentSuccess(commentedName, commentedContent, "刷新");
 		}
+
 		//返回至主界面
 
 		UiCollection relativelayoutCollect=new UiCollection(new UiSelector().className(android.widget.RelativeLayout.class.getName()));
@@ -839,45 +894,222 @@ public class Article extends UiAutomatorTestCase {
 
 
 
+	}
 
 
+	/**
+	 * 判断刷新以及发表评论后，评论列表中是否显示正确
+	 * @param commentedName
+	 * @param commentedContent
+	 * @param Mehod
+	 * @return
+	 * @throws UiObjectNotFoundException
+	 */
+	public boolean isCommentOtherCommentSuccess(String commentedName,String commentedContent,String Mehod) throws UiObjectNotFoundException{
+		UiObject listview = new UiObject(new UiSelector().className("android.widget.ListView"));
+		UiObject commentDetail = listview.getChild(new UiSelector().index(1));
 
-		//获取第一个评论的内容,这里多个判断是由于可能用户是未填写学校的情况
-		//		UiObject content = commentDetail.getChild(new UiSelector().className(android.widget.TextView.class.getName()).instance(3));
-		//		Constant.WriteLog(Constant.info, "列表第一条评论为"+content.getText().toString()); 
-		//		if(content.getText().toString().equals("good")){
-		//			Constant.WriteLog(Constant.info, "与发表的评论内容相同，评论发表成功"); 
-		//		}else{
-		//			content = commentDetail.getChild(new UiSelector().className(android.widget.TextView.class.getName()).instance(2));
-		//			if(content.getText().toString().equals("good")){
-		//				Constant.WriteLog(Constant.info, "与发表的评论内容相同，评论发表成功"); 
-		//			}else{
-		//				Constant.WriteLog(Constant.fail, "与发表的评论内容不相同，评论发表失败");
-		//
-		//			}
-		//
-		//		}
-		//
-		//		
-		//		commentImageView.clickAndWaitForNewWindow();
-		//		
-		//		
-		//		
-		//
-		//		
-		//		//评论相应内容点击发表
-		//		UiObject editText = new UiObject(new UiSelector().text(Constant.saySomething));
-		//		editText.setText(Constant.commentContent);
-		//		UiObject publicButton = new UiObject(new UiSelector().text(Constant.pubic));
-		//publicButton.click();
+		UiObject commentedContentTV = null;  
+		//若单纯为用户评论，无引用他人评论时
+		if(commentDetail.getChildCount()==4){
+			commentedContentTV =commentDetail.getChild(new UiSelector().index(1).className(android.widget.TextView.class.getName()).instance(1));
+		}else{
+			commentedContentTV =commentDetail.getChild(new UiSelector().index(2).className(android.widget.TextView.class.getName()).instance(1));
+		}
 
-		//重新进行查看是否有刚回复的信息
+		//比较第一条内容中评论内容是否为刚回复的内容
+		commentDetail = listview.getChild(new UiSelector().index(1));
+		UiObject commentContent =commentDetail.getChild(new UiSelector().index(2).className(android.widget.TextView.class.getName()).instance(1));
+		if(commentContent.exists()){
+			if(Constant.commentContent.equals(commentContent.getText())){
+				Constant.WriteLog(Constant.info, Mehod+"评论后，评论内容与输入时一致");
+				UiObject commentedNameTV = commentDetail.getChild(new UiSelector().textContains("@"+commentedName));
+				if(commentedNameTV.exists()){
+					commentedContentTV = commentDetail.getChild(new UiSelector().textContains(commentedContent));
+					if(commentedContentTV.exists()){
+						Constant.WriteLog(Constant.info, Mehod+"评论后，引用评论内容正确");
+						return true;
+					}else{
+						Constant.WriteLog(Constant.fail, Mehod+"评论后，引用评论内容不正确");
+						return false;
+					}
+				}else{
+					Constant.WriteLog(Constant.fail, Mehod+"评论后，引用评论名字不正确");
+					return false;
+				}
+			}else{
+				Constant.WriteLog(Constant.fail, Mehod+"评论后，评论内容与输入时不一致");
+				return false;
+			}
+		}else{
+			Constant.WriteLog(Constant.fail, Mehod+"评论后，评论内容与输入时不一致");
+			return false;
+		}
 
 
 
 	}
 
 
+	/**
+	 * 文章分享UI检测
+	 * @throws UiObjectNotFoundException
+	 */
+	public void ArticleShareUICheck(int index) throws UiObjectNotFoundException{
+		ArticalItem(index);
+		UiObject shareImageView = new UiObject(new UiSelector().className(android.widget.ImageView.class.getName()).instance(1));
+		if(shareImageView.exists()){
+			shareImageView.clickAndWaitForNewWindow();
+			UiCollection linearLayoutCollection = new UiCollection(new UiSelector().className(android.widget.LinearLayout.class.getName()));
+			UiObject linearLayout = linearLayoutCollection.getChildByInstance(new UiSelector().className(android.widget.LinearLayout.class.getName()), 1);
+			if(linearLayout.exists()){
+				if(linearLayout.getChildCount()==3){
+					Constant.WriteLog(Constant.info,"检测到有微博（新浪）、微信、朋友圈三个分享按钮");
+				}else{
+					Constant.WriteLog(Constant.fail,"未检测到有微博（新浪）、微信、朋友圈三个分享按钮");
+				}
+				//返回到文章列表
+				test.uidevice.pressBack();
+				test.uidevice.pressBack();
+			}
+		}else{
+			Constant.WriteLog(Constant.fail,"未找到分享按钮");
+		}
+	}
+
+
+	/**
+	 * 分享到朋友圈
+	 * @param index
+	 * @throws UiObjectNotFoundException
+	 */
+	public void ArticleShareCircle(int index) throws UiObjectNotFoundException{
+		ArticalItem(index);
+		UiObject shareImageView = new UiObject(new UiSelector().className(android.widget.ImageView.class.getName()).instance(1));
+		if(shareImageView.exists()){
+			shareImageView.clickAndWaitForNewWindow();
+			UiObject shareCircle = new UiObject(new UiSelector().className(android.widget.ImageView.class.getName()).instance(2));
+			if(shareCircle.exists()){
+				Constant.WriteLog(Constant.info,"点击分享至朋友圈");
+				shareCircle.clickAndWaitForNewWindow();	
+				if(ShareContent()){
+					Constant.WriteLog(Constant.info,"分享成功");
+				}else{
+					Constant.WriteLog(Constant.fail,"分享失败");
+				}
+			}
+
+		}else{
+			Constant.WriteLog(Constant.fail,"未找到分享按钮");
+		}
+		UiObject back = new UiObject(new UiSelector().className(android.widget.ImageView.class.getName()));
+		if(back.exists()){
+			back.click();
+		}
+	}
+	
+	/**
+	 * 分享到微信
+	 * @throws UiObjectNotFoundException
+	 */
+	
+	public void ArticleShareWeiXin(int index) throws UiObjectNotFoundException{
+		ArticalItem(index);
+		UiObject shareImageView = new UiObject(new UiSelector().className(android.widget.ImageView.class.getName()).instance(1));
+		if(shareImageView.exists()){
+			shareImageView.clickAndWaitForNewWindow();
+			UiObject shareWeiXin = new UiObject(new UiSelector().className(android.widget.ImageView.class.getName()).instance(1));
+			if(shareWeiXin.exists()){
+				Constant.WriteLog(Constant.info,"点击分享至微信");
+				shareWeiXin.clickAndWaitForNewWindow();	
+				UiObject shareTV = new UiObject(new UiSelector().text(Constant.createNewTalk));
+				if(shareTV.exists()){
+					shareTV.click();	
+					UiObject textView = new UiObject(new UiSelector().className("android.view.View").instance(1));
+					Constant.WriteLog(Constant.info,"发送文章至好友"+textView.getText());
+					textView.click();
+					UiObject confirmTV = new UiObject(new UiSelector().textContains(Constant.confirm));
+					if(confirmTV.exists()){
+						confirmTV.click();
+						if(ShareContent()){
+							Constant.WriteLog(Constant.info,"分享成功");
+							UiObject backLizhi = new UiObject(new UiSelector().textContains(Constant.back));
+							backLizhi.click();
+							
+						}else{
+							Constant.WriteLog(Constant.fail,"分享失败");
+						}
+					}
+				}else{
+					//微信未登录的情况
+				}
+			}
+
+		}else{
+			Constant.WriteLog(Constant.fail,"未找到分享按钮");
+		}
+		UiObject back = new UiObject(new UiSelector().className(android.widget.ImageView.class.getName()));
+		if(back.exists()){
+			back.click();
+		}
+		
+	}
+	
+	/**
+	 * 分享到新浪
+	 * @param index
+	 * @throws UiObjectNotFoundException
+	 */
+	public void ArticleShareSina(int index) throws UiObjectNotFoundException{
+		ArticalItem(index);
+		UiObject shareImageView = new UiObject(new UiSelector().className(android.widget.ImageView.class.getName()).instance(1));
+		if(shareImageView.exists()){
+			shareImageView.clickAndWaitForNewWindow();
+			UiObject shareSina = new UiObject(new UiSelector().className(android.widget.ImageView.class.getName()).instance(0));
+			if(shareSina.exists()){
+				shareSina.clickAndWaitForNewWindow();
+				UiObject confirmButton = new UiObject(new UiSelector().className(android.widget.Button.class.getName()).instance(1));
+				if(confirmButton.exists()){
+					confirmButton.click();
+					sleep(2000);
+				}else{
+					Constant.WriteLog(Constant.fail,"分享失败");
+				}
+			}
+		}else{
+			Constant.WriteLog(Constant.fail,"未找到分享按钮");
+		}
+		UiObject back = new UiObject(new UiSelector().className(android.widget.ImageView.class.getName()));
+		if(back.exists()){
+			back.click();
+		}
+	}
+
+	
+	
+	public boolean  ShareContent() throws UiObjectNotFoundException{
+		UiObject shareTV = new UiObject(new UiSelector().text(Constant.share));
+		if(shareTV.exists()){
+			//微信已登录的情况
+			UiObject shareContent = new UiObject(new UiSelector().className(android.widget.EditText.class.getName()));
+			shareContent.setText(Constant.commentContent);
+			shareTV.click();
+			return true;
+		}else{
+			//微信未登录的情况
+			return false;
+		}
+	}
+
+
+	public  void RefreshListView() throws UiObjectNotFoundException{
+
+		UiObject ListView  = new UiObject(new UiSelector().className(android.widget.ListView.class.getName()));
+		if(ListView.exists()){
+			ListView.swipeDown(20);
+			sleep(5000);
+		}	
+	}
 
 
 
