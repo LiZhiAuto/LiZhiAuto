@@ -26,13 +26,13 @@ public class Article extends UiAutomatorTestCase {
 
 			mailLogin.clickAndWaitForNewWindow();
 
-			UiObject mailEdit = new UiObject(new UiSelector().text("邮箱"));
+			UiObject mailEdit = new UiObject(new UiSelector().text(Constant.mail));
 
-			mailEdit.setText("411249087@qq.com");
+			mailEdit.setText(Constant.userName);
 
 			UiObject passwordEdit  = new UiObject(new UiSelector().className("android.widget.EditText").focused(false));
 
-			passwordEdit.setText("123456");
+			passwordEdit.setText(Constant.passWord);
 
 
 			UiObject login = new UiObject(new UiSelector().text("登录"));
@@ -48,6 +48,37 @@ public class Article extends UiAutomatorTestCase {
 		}
 
 	}
+
+
+	/**
+	 * 专题检查
+	 * @throws UiObjectNotFoundException
+	 */
+	public void TopicCheckAndTraversal() throws UiObjectNotFoundException{
+		UiObject horizontal = new UiObject(new UiSelector().className("android.widget.HorizontalScrollView"));
+		Constant.WriteLog(Constant.info,"找到专题列表"+horizontal.getChildCount());
+		if(horizontal.exists()){
+			UiObject linearLayout = horizontal.getChild(new UiSelector().index(0));
+			if(linearLayout.exists()){
+				for(int i=0;i<linearLayout.getChildCount();i++){
+					UiObject topicTV = new UiObject(new UiSelector().className(android.widget.TextView.class.getName()).instance(i));
+					if(topicTV.exists()){
+						Constant.WriteLog(Constant.info,"检测到专题"+topicTV.getText()+"并点击");
+//						topicTV.click();
+//						UiObject listView = new UiObject(new UiSelector().className(android.widget.ListView.class.getName()));
+//						if(listView.exists()){
+//							UiObject textView = listView.getChild(new UiSelector().clickable(true).index(2)).getChild(new UiSelector().className(android.widget.TextView.class.getName()));
+//							Constant.WriteLog(Constant.info, "第"+2+"条的标题为      "+textView.getText().toString());
+//						}
+					}
+				}
+			}
+		}else{
+			Constant.WriteLog(Constant.fail,"未找到专题列表");
+		}
+	}
+
+
 
 
 	/**
@@ -279,7 +310,7 @@ public class Article extends UiAutomatorTestCase {
 		//找到更多按钮
 
 		try {
-			String str = "";
+			//	String str = "";
 			UiObject article = new UiObject(new UiSelector().text(Constant.article)); 
 			article.click();
 			/**
@@ -675,6 +706,8 @@ public class Article extends UiAutomatorTestCase {
 
 		Constant.WriteLog(Constant.info, "填写内容\"good\"");
 		commentEditText.clearTextField();
+		commentEditText.clearTextField();
+		commentEditText.clearTextField();
 		commentEditText.setText("good");
 
 		//获取输入内容后，允许字符剩余多少
@@ -1007,12 +1040,12 @@ public class Article extends UiAutomatorTestCase {
 			back.click();
 		}
 	}
-	
+
 	/**
 	 * 分享到微信
 	 * @throws UiObjectNotFoundException
 	 */
-	
+
 	public void ArticleShareWeiXin(int index) throws UiObjectNotFoundException{
 		ArticalItem(index);
 		UiObject shareImageView = new UiObject(new UiSelector().className(android.widget.ImageView.class.getName()).instance(1));
@@ -1025,21 +1058,35 @@ public class Article extends UiAutomatorTestCase {
 				UiObject shareTV = new UiObject(new UiSelector().text(Constant.createNewTalk));
 				if(shareTV.exists()){
 					shareTV.click();	
-					UiObject textView = new UiObject(new UiSelector().className("android.view.View").instance(1));
-					Constant.WriteLog(Constant.info,"发送文章至好友"+textView.getText());
-					textView.click();
-					UiObject confirmTV = new UiObject(new UiSelector().textContains(Constant.confirm));
-					if(confirmTV.exists()){
-						confirmTV.click();
-						if(ShareContent()){
-							Constant.WriteLog(Constant.info,"分享成功");
-							UiObject backLizhi = new UiObject(new UiSelector().textContains(Constant.back));
-							backLizhi.click();
-							
-						}else{
-							Constant.WriteLog(Constant.fail,"分享失败");
+					UiObject textView = new UiObject(new UiSelector().className(android.widget.TextView.class.getName()).instance(4));
+					if(textView.exists()){
+						Constant.WriteLog(Constant.info,"发送文章至好友"+textView.getText());
+						textView.click();
+						UiObject confirmTV = new UiObject(new UiSelector().textContains(Constant.confirm));
+						if(confirmTV.exists()){
+							confirmTV.click();
+							if(ShareContent()){
+								Constant.WriteLog(Constant.info,"分享成功");
+								UiObject backLizhi = new UiObject(new UiSelector().textContains(Constant.back));
+								backLizhi.click();
+
+							}else{
+								Constant.WriteLog(Constant.fail,"分享失败");
+							}
 						}
+					}else{
+						Constant.WriteLog(Constant.fail,"未找到好友发送");
+						UiObject back = new UiObject(new UiSelector().className(android.widget.ImageView.class.getName()));
+						if(back.exists()){
+							back.click();
+							 back = new UiObject(new UiSelector().className(android.widget.ImageView.class.getName()));
+							if(back.exists()){
+								back.click();
+							}
+						}
+						
 					}
+					
 				}else{
 					//微信未登录的情况
 				}
@@ -1052,9 +1099,9 @@ public class Article extends UiAutomatorTestCase {
 		if(back.exists()){
 			back.click();
 		}
-		
+
 	}
-	
+
 	/**
 	 * 分享到新浪
 	 * @param index
@@ -1085,8 +1132,8 @@ public class Article extends UiAutomatorTestCase {
 		}
 	}
 
-	
-	
+
+
 	public boolean  ShareContent() throws UiObjectNotFoundException{
 		UiObject shareTV = new UiObject(new UiSelector().text(Constant.share));
 		if(shareTV.exists()){

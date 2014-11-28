@@ -3,9 +3,6 @@ package com.cvte.lizhi;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.android.uiautomator.core.UiObject;
-import com.android.uiautomator.core.UiObjectNotFoundException;
-import com.android.uiautomator.core.UiSelector;
 
 public class Constant {
 
@@ -20,6 +17,10 @@ public class Constant {
 	public static String noLoginTip = "你还没有登录哦";
 	
 	public static String mailLogin = "邮箱登录";
+	
+	public static String userName = "411249087@qq.com";
+	
+	public static String passWord = "123456";
 	
 	public static String comment = "评论";
 	

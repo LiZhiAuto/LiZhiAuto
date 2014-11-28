@@ -46,11 +46,8 @@ public class test extends UiAutomatorTestCase {
 		IsExistUpdate();
 		Article article = new Article();
 		My my = new My();
-		
-
-		
-		Constant.WriteLog(Constant.info,"-----------评论文章的评论功能验证-----------");
-		article.ArticleCommentOtherComment(INDEX);
+		//article.TopicCheckAndTraversal();
+		article.ArticleShareWeiXin(INDEX);
 		Constant.WriteLog(Constant.info,"-----------文章全部列表UI验证-----------");
 		article.ArticleUICheck();
 		Constant.WriteLog(Constant.info,"-----------文章点赞及取消点赞功能验证-----------");
