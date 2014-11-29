@@ -2,6 +2,8 @@
 
 package com.cvte.lizhi;
 
+import android.os.RemoteException;
+
 import com.android.uiautomator.core.UiDevice;
 import com.android.uiautomator.core.UiObject;
 import com.android.uiautomator.core.UiObjectNotFoundException;
@@ -46,7 +48,11 @@ public class test extends UiAutomatorTestCase {
 		IsExistUpdate();
 		Article article = new Article();
 		My my = new My();
-		//article.TopicCheckAndTraversal();
+		
+
+		
+		article.ArticleShareSina(INDEX);
+		
 		article.ArticleShareWeiXin(INDEX);
 		Constant.WriteLog(Constant.info,"-----------文章全部列表UI验证-----------");
 		article.ArticleUICheck();

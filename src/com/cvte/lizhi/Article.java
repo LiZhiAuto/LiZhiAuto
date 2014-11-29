@@ -1,6 +1,8 @@
 
 package com.cvte.lizhi;
 
+import android.os.RemoteException;
+
 import com.android.uiautomator.core.UiCollection;
 import com.android.uiautomator.core.UiObject;
 import com.android.uiautomator.core.UiObjectNotFoundException;
@@ -141,6 +143,8 @@ public class Article extends UiAutomatorTestCase {
 			UiObject date = listview.getChild(new UiSelector().clickable(true).index(i).className(android.widget.LinearLayout.class.getName()));
 			textView = date.getChild(new UiSelector().index(0)).getChild(new UiSelector().index(0)).getChild(new UiSelector().index(1)).getChild(new UiSelector().index(1));
 			Constant.WriteLog(Constant.info, "第"+i+"条的时间为      "+textView.getText().toString());
+			
+			
 		}
 
 
@@ -1028,7 +1032,16 @@ public class Article extends UiAutomatorTestCase {
 				if(ShareContent()){
 					Constant.WriteLog(Constant.info,"分享成功");
 				}else{
-					Constant.WriteLog(Constant.fail,"分享失败");
+					UiObject loginTv = new UiObject(new UiSelector().text(Constant.login)); 
+					if(loginTv.exists()){
+						Constant.WriteLog(Constant.fail,"微信未登录，请登录后再进行该测试");
+						UiObject back = new UiObject(new UiSelector().className(android.widget.ImageView.class.getName()));
+						if(back.exists()){
+							back.click();
+						}
+					}else{
+						Constant.WriteLog(Constant.fail,"微信未安装，请安装微信");
+					}
 				}
 			}
 
@@ -1088,6 +1101,17 @@ public class Article extends UiAutomatorTestCase {
 					}
 					
 				}else{
+					UiObject loginTv = new UiObject(new UiSelector().text(Constant.login)); 
+					if(loginTv.exists()){
+						Constant.WriteLog(Constant.fail,"微信未登录，请登录后再进行该测试");
+						UiObject back = new UiObject(new UiSelector().className(android.widget.ImageView.class.getName()));
+						if(back.exists()){
+							back.click();
+						}
+					}else{
+						Constant.WriteLog(Constant.fail,"微信未安装，请安装微信");
+					}
+				
 					//微信未登录的情况
 				}
 			}
@@ -1120,7 +1144,12 @@ public class Article extends UiAutomatorTestCase {
 					confirmButton.click();
 					sleep(2000);
 				}else{
-					Constant.WriteLog(Constant.fail,"分享失败");
+					Constant.WriteLog(Constant.fail,"当前不支持非客户端的微博分享，请安装微博后进行验证");
+					UiObject closeBt = new UiObject(new UiSelector().className(android.widget.Button.class.getName()));
+					if(closeBt.exists()){
+						closeBt.click();
+					}
+					
 				}
 			}
 		}else{
@@ -1156,6 +1185,20 @@ public class Article extends UiAutomatorTestCase {
 			ListView.swipeDown(20);
 			sleep(5000);
 		}	
+	}
+	
+	
+	/**
+	 * 退出应用
+	 * @throws UiObjectNotFoundException
+	 * @throws RemoteException
+	 */
+	public void CloseApplication() throws UiObjectNotFoundException, RemoteException{
+		test.uidevice.pressHome();
+		test.uidevice.pressRecentApps();
+		UiObject liZhiTV = new UiObject(new UiSelector().text(Constant.application));
+		liZhiTV.swipeLeft(10);
+		test.uidevice.pressHome();
 	}
 
 

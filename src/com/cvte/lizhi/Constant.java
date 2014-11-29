@@ -18,6 +18,8 @@ public class Constant {
 	
 	public static String mailLogin = "邮箱登录";
 	
+	public static String login = "登录";
+	
 	public static String userName = "411249087@qq.com";
 	
 	public static String passWord = "123456";
@@ -79,6 +81,8 @@ public class Constant {
 	public static String confirm = "确定";
 	
 	public static String back = "返回";
+	
+	public static String application = "立知";
 
 
 	/**
