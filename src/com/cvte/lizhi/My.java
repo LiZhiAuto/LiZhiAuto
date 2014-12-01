@@ -25,8 +25,11 @@ public class My extends UiAutomatorTestCase {
 	public void ModifySex() throws UiObjectNotFoundException{
 		EnterMyPage();
 		//查找编辑个人信息按钮
-		UiObject EditInfo = new UiObject(new UiSelector().className(android.widget.ImageButton.class.getName()));
-		EditInfo.clickAndWaitForNewWindow();
+		UiObject EditInfo = Constant.GetObject(Constant.IMAGEBUTTON, 0);
+		if(EditInfo!=null){
+			EditInfo.clickAndWaitForNewWindow();
+		}
+		
 		//首先先判断当前个人信息中的性别,并修改性别
 		UiObject SexTextView = new UiObject(new UiSelector().text(Constant.sex));
 		if(SexTextView.exists()){

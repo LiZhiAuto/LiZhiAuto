@@ -1,6 +1,7 @@
 
 package com.cvte.lizhi;
 
+
 import android.os.RemoteException;
 
 import com.android.uiautomator.core.UiCollection;
@@ -8,6 +9,7 @@ import com.android.uiautomator.core.UiObject;
 import com.android.uiautomator.core.UiObjectNotFoundException;
 import com.android.uiautomator.core.UiSelector;
 import com.android.uiautomator.testrunner.UiAutomatorTestCase;
+import com.cvte.lizhiUI.ArticleUI;
 
 public class Article extends UiAutomatorTestCase {
 
@@ -16,6 +18,9 @@ public class Article extends UiAutomatorTestCase {
 
 	private String articleString;
 
+	private int TITLE = 2;
+	private int CHANNEL = 1;
+	private int DATE = 0;
 
 
 	/**
@@ -24,25 +29,21 @@ public class Article extends UiAutomatorTestCase {
 	public void DialogLoginOn(){
 		try {
 
-			UiObject mailLogin = new UiObject(new UiSelector().text(Constant.mailLogin));
+			UiObject mailLogin = Constant.GetTextObject(Constant.mailLogin);
+			if(mailLogin!=null){
+				mailLogin.clickAndWaitForNewWindow();
+				UiObject mailEdit =  Constant.GetTextObject(Constant.mail);
+				mailEdit.setText(Constant.userName);
+				UiObject passwordEdit  = Constant.GetObject(Constant.EDITTEXT, 1);
+				passwordEdit.setText(Constant.passWord);
+				UiObject login = Constant.GetTextObject(Constant.login);
+				login.clickAndWaitForNewWindow();
+				sleep(2000);
+				if(!login.exists()){
+					Constant.WriteLog(Constant.info, "登录成功");
+				}
 
-			mailLogin.clickAndWaitForNewWindow();
-
-			UiObject mailEdit = new UiObject(new UiSelector().text(Constant.mail));
-
-			mailEdit.setText(Constant.userName);
-
-			UiObject passwordEdit  = new UiObject(new UiSelector().className("android.widget.EditText").focused(false));
-
-			passwordEdit.setText(Constant.passWord);
-
-
-			UiObject login = new UiObject(new UiSelector().text("登录"));
-
-			login.clickAndWaitForNewWindow();
-
-			Constant.WriteLog(Constant.info, "登录成功");
-
+			}
 		} catch (UiObjectNotFoundException e) {
 
 			e.printStackTrace();
@@ -56,29 +57,29 @@ public class Article extends UiAutomatorTestCase {
 	 * 专题检查
 	 * @throws UiObjectNotFoundException
 	 */
-	public void TopicCheckAndTraversal() throws UiObjectNotFoundException{
-		UiObject horizontal = new UiObject(new UiSelector().className("android.widget.HorizontalScrollView"));
-		Constant.WriteLog(Constant.info,"找到专题列表"+horizontal.getChildCount());
-		if(horizontal.exists()){
-			UiObject linearLayout = horizontal.getChild(new UiSelector().index(0));
-			if(linearLayout.exists()){
-				for(int i=0;i<linearLayout.getChildCount();i++){
-					UiObject topicTV = new UiObject(new UiSelector().className(android.widget.TextView.class.getName()).instance(i));
-					if(topicTV.exists()){
-						Constant.WriteLog(Constant.info,"检测到专题"+topicTV.getText()+"并点击");
-//						topicTV.click();
-//						UiObject listView = new UiObject(new UiSelector().className(android.widget.ListView.class.getName()));
-//						if(listView.exists()){
-//							UiObject textView = listView.getChild(new UiSelector().clickable(true).index(2)).getChild(new UiSelector().className(android.widget.TextView.class.getName()));
-//							Constant.WriteLog(Constant.info, "第"+2+"条的标题为      "+textView.getText().toString());
-//						}
-					}
-				}
-			}
-		}else{
-			Constant.WriteLog(Constant.fail,"未找到专题列表");
-		}
-	}
+	//	public void TopicCheckAndTraversal() throws UiObjectNotFoundException{
+	//		UiObject horizontal = new UiObject(new UiSelector().className("android.widget.HorizontalScrollView"));
+	//		Constant.WriteLog(Constant.info,"找到专题列表"+horizontal.getChildCount());
+	//		if(horizontal.exists()){
+	//			UiObject linearLayout = horizontal.getChild(new UiSelector().index(0));
+	//			if(linearLayout.exists()){
+	//				for(int i=0;i<linearLayout.getChildCount();i++){
+	//					UiObject topicTV = new UiObject(new UiSelector().className(android.widget.TextView.class.getName()).instance(i));
+	//					if(topicTV.exists()){
+	//						Constant.WriteLog(Constant.info,"检测到专题"+topicTV.getText()+"并点击");
+	////						topicTV.click();
+	////						UiObject listView = new UiObject(new UiSelector().className(android.widget.ListView.class.getName()));
+	////						if(listView.exists()){
+	////							UiObject textView = listView.getChild(new UiSelector().clickable(true).index(2)).getChild(new UiSelector().className(android.widget.TextView.class.getName()));
+	////							Constant.WriteLog(Constant.info, "第"+2+"条的标题为      "+textView.getText().toString());
+	////						}
+	//					}
+	//				}
+	//			}
+	//		}else{
+	//			Constant.WriteLog(Constant.fail,"未找到专题列表");
+	//		}
+	//	}
 
 
 
@@ -87,28 +88,26 @@ public class Article extends UiAutomatorTestCase {
 	 * 文章列表item的点击
 	 * @param index
 	 */
-	public void ArticalItem(int index){
+	public String  ArticalItem(int index){
 		try {
-
-			UiObject article = new UiObject(new UiSelector().text(Constant.article)); 
+			UiObject article = Constant.GetTextObject(Constant.article); 
 			article.click();
-
-			UiObject listview = new UiObject(new UiSelector().className("android.widget.ListView"));
-
-			//获取item中主题的内容
-
-			//UiObject textViews = listview.getChild(new UiSelector().clickable(true).index(index));
-			//此处有多个textView 但是标题是第一个textView 所以默认是查找的是它
-			UiObject textView = listview.getChild(new UiSelector().clickable(true).index(index)).getChild(new UiSelector().className("android.widget.TextView"));
-
-			articleString = textView.getText().toString();
-			Constant.WriteLog(Constant.info, "所点击的文章标题为"+textView.getText().toString());
-			listview.getChild(new UiSelector().clickable(true).index(index)).click();
+			UiObject textView = ArticleUI.GetAricleTitle(index,TITLE);
+			if(textView!=null){
+				String title = textView.getText();
+				Constant.WriteLog(Constant.info, "所点击的文章标题为"+textView.getText());
+				textView.clickAndWaitForNewWindow();
+				return title;
+			}else{
+				Constant.WriteLog(Constant.fail,"未找到文章标题");
+			}
 		} catch (UiObjectNotFoundException e) {
 
 			e.printStackTrace();
 
 		}
+
+		return "";
 	}
 
 
@@ -120,32 +119,32 @@ public class Article extends UiAutomatorTestCase {
 	 */
 	public void ArticleUICheck() throws UiObjectNotFoundException{
 
-		UiObject article = new UiObject(new UiSelector().text(Constant.article)); 
-		article.click();
-		//查找到对应的全部列表的textView
-		UiCollection frameLayoutCollect=new UiCollection(new UiSelector().className(android.widget.FrameLayout.class.getName()));
-		UiObject frameLayoutPraise = frameLayoutCollect.getChildByInstance(new UiSelector().className(android.widget.FrameLayout.class.getName()), 4);
-		UiObject allTextView = frameLayoutPraise.getChild(new UiSelector().className(android.widget.TextView.class.getName()));
-		allTextView.click();
+		UiObject article = Constant.GetTextObject(Constant.article); 
+		if(article!=null){
+			article.click();
+			UiObject all = Constant.GetTextObject(Constant.all);
+			if(all!=null){
+				//列表中的标题查看
+				UiObject listview = Constant.GetObject(Constant.LISTVIEW, 0);
+				for(int i=1;i<listview.getChildCount();i++){
+					UiObject title = ArticleUI.GetAricleTitle(i, TITLE);
+					Constant.WriteLog(Constant.info, "第"+i+"条的标题为      "+title.getText());
 
-		//列表中的标题查看
-		UiObject listview = new UiObject(new UiSelector().className(android.widget.ListView.class.getName()));
-		for(int i=2;i<listview.getChildCount();i++){
-			UiObject textView = listview.getChild(new UiSelector().clickable(true).index(i)).getChild(new UiSelector().className(android.widget.TextView.class.getName()));
-			Constant.WriteLog(Constant.info, "第"+i+"条的标题为      "+textView.getText().toString());
+					//列表中的所在频道
+					UiObject Channel = ArticleUI.GetAricleTitle(i, CHANNEL);
+					Constant.WriteLog(Constant.info, "第"+i+"条的频道为      "+Channel.getText());
 
-			//列表中的所在频道
-			UiObject Channel = listview.getChild(new UiSelector().clickable(true).index(i).className(android.widget.LinearLayout.class.getName()));
-			textView = Channel.getChild(new UiSelector().index(0)).getChild(new UiSelector().index(0)).getChild(new UiSelector().index(1)).getChild(new UiSelector().index(0));
-			Constant.WriteLog(Constant.info, "第"+i+"条的频道为      "+textView.getText().toString());
+					//列表中的日期
+					UiObject date = ArticleUI.GetAricleTitle(i, DATE);
+					Constant.WriteLog(Constant.info, "第"+i+"条的时间为      "+date.getText());
 
-			//列表中的所在频道
-			UiObject date = listview.getChild(new UiSelector().clickable(true).index(i).className(android.widget.LinearLayout.class.getName()));
-			textView = date.getChild(new UiSelector().index(0)).getChild(new UiSelector().index(0)).getChild(new UiSelector().index(1)).getChild(new UiSelector().index(1));
-			Constant.WriteLog(Constant.info, "第"+i+"条的时间为      "+textView.getText().toString());
-			
-			
+
+				}
+			}
 		}
+
+
+
 
 
 	}
@@ -154,81 +153,70 @@ public class Article extends UiAutomatorTestCase {
 	/**
 	 * 收藏文章
 	 */
-	public void collectArticle(int index ){
+	public void CollectArticle(int index ){
 		try {
 			for(int i=0;i<2;i++){
 				if(i==1){
 					//再次进行点赞操作
 					Constant.WriteLog(Constant.info, "再次进行收藏/取消收藏操作");
 				}
-
-				ArticalItem( index);
+				String title = ArticalItem(index);
 				boolean isCollect = false;
 				//找到更多按钮
-				UiCollection resultspage=new UiCollection(new UiSelector().className(android.widget.LinearLayout.class.getName()));
-				UiObject resultLayout=resultspage.getChildByInstance(new UiSelector().className(android.widget.LinearLayout.class.getName()), 2);
-				UiObject fantile=resultLayout.getChild(new UiSelector().className("android.widget.ImageView").index(4)); 
-				fantile.click();
-
-				//判断当前为取消收藏还是收藏按钮
-				UiObject collectArticle =  new UiObject(new UiSelector().className("android.widget.TextView"));
-				if(collectArticle.getText().toString().equals("取消收藏")){
-					isCollect = true;
-				}else{
-					isCollect = false;
-				}
-				collectArticle.click();
-
-				UiObject loginTip = new UiObject(new UiSelector().text(Constant.noLoginTip)); 
-				if(loginTip.exists()){
-					Constant.WriteLog(Constant.info, "当前为未登录状态，进行登录操作");
-					DialogLoginOn();
-					collectArticle(index);
-					break;
-				}else{
-
-					if(isCollect){
-						Constant.WriteLog(Constant.info, "当前文章为已收藏状态，进行取消收藏操作");
+				UiObject more = Constant.GetObject(Constant.IMAGEVIEW, 2);
+				if(more!=null){
+					more.clickAndWaitForNewWindow();
+					//判断当前为取消收藏还是收藏按钮
+					UiObject collectArticle =  Constant.GetObject(Constant.TEXTVIEW, 0);
+					if(collectArticle.getText().equals(Constant.cancelCollect)){
+						isCollect = true;
 					}else{
-						Constant.WriteLog(Constant.info, "当前文章为未收藏状态,进行收藏操作");
+						isCollect = false;
 					}
+					collectArticle.click();
 
-					//返回到文章列表
-					test.uidevice.pressBack();
-					test.uidevice.pressBack();
+					UiObject loginTip = Constant.GetTextObject(Constant.noLoginTip); 
+					if(loginTip!=null){
+						Constant.WriteLog(Constant.info, "当前为未登录状态，进行登录操作");
+						DialogLoginOn();
+						CollectArticle(index);
+						break;
+					}else{
+						if(isCollect){
+							Constant.WriteLog(Constant.info, "当前文章为已收藏状态，进行取消收藏操作");
+						}else{
+							Constant.WriteLog(Constant.info, "当前文章为未收藏状态,进行收藏操作");
+						}
 
-					UiObject my = new UiObject(new UiSelector().text(Constant.my)); 
-					my.click();
-					UiObject myColect = new UiObject(new UiSelector().text(Constant.myColect)); 
-					myColect.click();
+						//返回到文章列表
+						test.uidevice.pressBack();
+						test.uidevice.pressBack();
 
+						UiObject my = Constant.GetTextObject(Constant.my) ;
+						my.click();
+						UiObject myColect = Constant.GetTextObject(Constant.myColect); 
+						myColect.click();
+						if(isCollect){
 
-
-
-					if(isCollect){
-						try {
-							UiObject textview = new UiObject(new UiSelector().text(articleString));
-							if(textview.exists()){
+							UiObject textview = Constant.GetTextObject(title);
+							if(textview!=null){
 								Constant.WriteLog(Constant.fail, "文章取消收藏失败");
 							}else{
 								Constant.WriteLog(Constant.info, "文章已取消收藏");
 							}
-						} catch (Exception e) {
-							Constant.WriteLog(Constant.info, "文章已取消收藏");
-						}
-					}else{
-						try {
-							new UiObject(new UiSelector().text(articleString));
-							Constant.WriteLog(Constant.info, "文章收藏成功");
-						} catch (Exception e) {
-							Constant.WriteLog(Constant.fail, "文章收藏失败");
+
+						}else{
+
+							UiObject textview = Constant.GetTextObject(title);
+							if(textview!=null){
+								Constant.WriteLog(Constant.info, "文章收藏成功");
+							}else{
+								Constant.WriteLog(Constant.fail, "文章收藏失败");
+							}
 						}
 					}
+
 				}
-
-
-
-
 			}
 
 
@@ -241,41 +229,37 @@ public class Article extends UiAutomatorTestCase {
 	}
 
 
+	/**
+	 * 搜索界面UI检查
+	 * @throws UiObjectNotFoundException
+	 */
 	public void SearchArticleUICheck() throws UiObjectNotFoundException{
 
-		UiObject article = new UiObject(new UiSelector().text(Constant.article)); 
+		UiObject article = Constant.GetTextObject(Constant.article); 
 		article.click();
 		/**
 		 * 点击搜索按钮
 		 */
-		UiCollection toolBarPage=new UiCollection(new UiSelector().className(android.widget.LinearLayout.class.getName()));
-
-		UiObject resultLayout;
-
-		resultLayout = toolBarPage.getChildByInstance(new UiSelector().className(android.widget.LinearLayout.class.getName()), 3);
-
-		UiObject searchImage=resultLayout.getChild(new UiSelector().className("android.widget.ImageView").index(2)); 
-
+		UiObject searchImage=Constant.GetObject(Constant.IMAGEVIEW, 0);
 		searchImage.clickAndWaitForNewWindow();		
-
-		UiObject searchEdit = new UiObject(new UiSelector().className(android.widget.EditText.class.getName()));
-		if(searchEdit.exists()){
+		UiObject searchEdit = Constant.GetObject(Constant.EDITTEXT, 0);
+		if(searchEdit!=null){
 			Constant.WriteLog(Constant.info, "界面存在有搜索框 ");
-			UiObject hotSearch = new UiObject(new UiSelector().text(Constant.hotSearch));
-			if(hotSearch.exists()){
+			UiObject hotSearch = Constant.GetTextObject(Constant.hotSearch);
+			if(hotSearch!=null){
 				Constant.WriteLog(Constant.info, "界面存在有热门搜索");
-				UiObject gridView = new UiObject(new UiSelector().className(android.widget.GridView.class.getName()));
-				if(gridView.exists()){
+				UiObject gridView = Constant.GetObject(Constant.GRIDVIEW, 0);
+				if(gridView!=null){
 					Constant.WriteLog(Constant.info, "热门搜索的关键字分别为:");
 					for(int i=0;i<gridView.getChildCount();i++){
-						UiObject textView = gridView.getChild(new UiSelector().className(android.widget.TextView.class.getName()).instance(i));
-						Constant.WriteLog(Constant.info,textView.getText().toString());
+						UiObject textView = ArticleUI.GetArticleSearchItem(gridView, i);
+						Constant.WriteLog(Constant.info,textView.getText());
 					}
-					UiObject historySearch = new UiObject(new UiSelector().text(Constant.historySearch));
-					if(historySearch.exists()){
+					UiObject historySearch = Constant.GetTextObject(Constant.historySearch);
+					if(historySearch!=null){
 						Constant.WriteLog(Constant.info, "界面存在有历史搜索");
-						UiObject clearSearch = new UiObject(new UiSelector().text(Constant.clearSearch));
-						if(clearSearch.exists()){
+						UiObject clearSearch =  Constant.GetTextObject(Constant.clearSearch);
+						if(clearSearch!=null){
 							Constant.WriteLog(Constant.info, "界面存在有清除历史搜索");
 						}else{
 							Constant.WriteLog(Constant.fail, "界面不存在有清除历史搜索");
@@ -315,20 +299,13 @@ public class Article extends UiAutomatorTestCase {
 
 		try {
 			//	String str = "";
-			UiObject article = new UiObject(new UiSelector().text(Constant.article)); 
+			UiObject article = Constant.GetTextObject(Constant.article); 
 			article.click();
 			/**
 			 * 点击搜索按钮
 			 */
-			UiCollection toolBarPage=new UiCollection(new UiSelector().className(android.widget.LinearLayout.class.getName()));
-
-			UiObject resultLayout;
-
-			resultLayout = toolBarPage.getChildByInstance(new UiSelector().className(android.widget.LinearLayout.class.getName()), 3);
-
-			UiObject searchImage=resultLayout.getChild(new UiSelector().className("android.widget.ImageView").index(2)); 
-
-			searchImage.clickAndWaitForNewWindow();		
+			UiObject searchImage=Constant.GetObject(Constant.IMAGEVIEW, 0);
+			searchImage.clickAndWaitForNewWindow();	
 			if(HotSearch()){
 				if(HistorySearch()){
 					//点击清除搜索历史查看是否还存在listview
@@ -337,28 +314,15 @@ public class Article extends UiAutomatorTestCase {
 			}
 
 			//点击返回按钮
-
-			UiCollection relativeLayoutCollect = new UiCollection(new UiSelector().className(android.widget.RelativeLayout.class.getName()));
-
-			UiObject rinearLayout=relativeLayoutCollect.getChildByInstance(new UiSelector().className(android.widget.RelativeLayout.class.getName()), 0);
-
-			if(rinearLayout.exists()){
-				UiObject back = rinearLayout.getChild(new UiSelector().className(android.widget.ImageView.class.getName()));
-
-				back.click();
+			UiObject back=Constant.GetObject(Constant.IMAGEVIEW, 0);
+			if(back!=null){
+				back.clickAndWaitForNewWindow();	
 			}
-
-
-
-
 		}catch (UiObjectNotFoundException e) {
 
 			e.printStackTrace();
 
 		}
-
-
-
 	}
 
 	/**
@@ -367,28 +331,25 @@ public class Article extends UiAutomatorTestCase {
 	 * @throws UiObjectNotFoundException
 	 */
 	public boolean HotSearch() throws UiObjectNotFoundException{
-		UiObject gridView = new UiObject(new UiSelector().className(android.widget.GridView.class.getName()));
+		UiObject gridView = Constant.GetObject(Constant.GRIDVIEW, 0);
 
-		if(gridView.exists()){
+		if(gridView!=null){
 			Constant.WriteLog(Constant.info, "进入文章搜索界面");
 			int count  = gridView.getChildCount();
 
 			for(int i=0;i<count;i++){
 
-				UiObject textView = gridView.getChild(new UiSelector().className(android.widget.TextView.class.getName()).instance(i));
+				UiObject textView = ArticleUI.GetArticleSearchItem(gridView, i);
 
-				String str = textView.getText().toString();
+				String str = textView.getText();
 
 				Constant.WriteLog(Constant.info, "点击\""+str+"\"进行文章搜索");
 
-				textView.click();
-
-				sleep(1000);
+				textView.clickAndWaitForNewWindow();
 
 				//查看是否进入到搜索文章列表
 				if(!gridView.exists()){
-					UiObject listView = new UiObject(new UiSelector().className(android.widget.ListView.class.getName()));
-
+					UiObject listView = Constant.GetObject(Constant.LISTVIEW, 0);
 					UiObject searchArticle = listView.getChild(new UiSelector().textContains(str));
 					if((!searchArticle.exists())&&listView.getChildCount()>0){
 						searchArticle = listView.getChild(new UiSelector().className(android.widget.TextView.class.getName()).instance(0));
@@ -1092,14 +1053,14 @@ public class Article extends UiAutomatorTestCase {
 						UiObject back = new UiObject(new UiSelector().className(android.widget.ImageView.class.getName()));
 						if(back.exists()){
 							back.click();
-							 back = new UiObject(new UiSelector().className(android.widget.ImageView.class.getName()));
+							back = new UiObject(new UiSelector().className(android.widget.ImageView.class.getName()));
 							if(back.exists()){
 								back.click();
 							}
 						}
-						
+
 					}
-					
+
 				}else{
 					UiObject loginTv = new UiObject(new UiSelector().text(Constant.login)); 
 					if(loginTv.exists()){
@@ -1111,7 +1072,7 @@ public class Article extends UiAutomatorTestCase {
 					}else{
 						Constant.WriteLog(Constant.fail,"微信未安装，请安装微信");
 					}
-				
+
 					//微信未登录的情况
 				}
 			}
@@ -1149,7 +1110,7 @@ public class Article extends UiAutomatorTestCase {
 					if(closeBt.exists()){
 						closeBt.click();
 					}
-					
+
 				}
 			}
 		}else{
@@ -1186,8 +1147,8 @@ public class Article extends UiAutomatorTestCase {
 			sleep(5000);
 		}	
 	}
-	
-	
+
+
 	/**
 	 * 退出应用
 	 * @throws UiObjectNotFoundException

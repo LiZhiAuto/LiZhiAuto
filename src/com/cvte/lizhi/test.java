@@ -24,7 +24,12 @@ public class test extends UiAutomatorTestCase {
 
 		// Simulate a short press on the HOME button.
 		// getUiDevice().pressHome();
+		Article article = new Article();
+	
+		
 		uidevice = getUiDevice();
+		Constant.WriteLog(Constant.info,"-----------文章搜索UI验证-----------");
+		article.SearchArticleUICheck();
 		width = uidevice.getDisplayWidth();
 		height = uidevice.getDisplayHeight();
 		System.out.println(width+""+height);
@@ -46,7 +51,6 @@ public class test extends UiAutomatorTestCase {
 		settingsApp.clickAndWaitForNewWindow();
 		//sleep(300);
 		IsExistUpdate();
-		Article article = new Article();
 		My my = new My();
 		
 
@@ -65,7 +69,7 @@ public class test extends UiAutomatorTestCase {
 		article.ArticleShareWeiXin(INDEX);
 		article.ArticleShareSina(INDEX);
 		Constant.WriteLog(Constant.info,"-----------文章收藏以及取消收藏功能验证-----------");
-		article.collectArticle(INDEX);
+		article.CollectArticle(INDEX);
 		Constant.WriteLog(Constant.info,"-----------文章搜索UI验证-----------");
 		article.SearchArticleUICheck();
 		Constant.WriteLog(Constant.info,"-----------文章搜索功能验证-----------");

@@ -3,16 +3,23 @@ package com.cvte.lizhi;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.android.uiautomator.core.UiObject;
+import com.android.uiautomator.core.UiSelector;
+
 
 public class Constant {
 
 	public static String my = "我的";
 	
 	public static String myColect = "我的收藏";
+	
+	public static String cancelCollect = "取消收藏";
 
 	public static String messageCenter = "消息中心";
 	
 	public static String article = "文章";
+	
+	public static String all = "全部";
 	
 	public static String noLoginTip = "你还没有登录哦";
 	
@@ -84,7 +91,17 @@ public class Constant {
 	
 	public static String application = "立知";
 
-
+	public static String IMAGEVIEW = "android.widget.ImageView";
+	
+	public static String IMAGEBUTTON = "android.widget.ImageButton";
+	
+	public static String TEXTVIEW = "android.widget.TextView";
+	
+	public static String EDITTEXT = "android.widget.EditText";
+	
+	public static String LISTVIEW = "android.widget.ListView";
+	
+	public static String GRIDVIEW = "android.widget.GridView";
 	/**
 	 * log 等级
 	 */
@@ -99,6 +116,34 @@ public class Constant {
 		// new Date()为获取当前系统时间
 		
 		System.out.println(df.format(new Date())+":"+Level+"------"+str);
+	}
+	
+	/**
+	 * 返回一个索引值为index,class为objectStr的object
+	 * @param objectStr
+	 * @param index
+	 * @return
+	 */
+	public static UiObject GetObject(String objectStr,int index){
+		UiObject object = new UiObject(new UiSelector().className(objectStr).instance(index));
+		if(object.exists()){
+			return object; 
+		}else{
+			return null;
+		}
+	}
+	/**
+	 * 返回一个内容为text的Object
+	 * @param text
+	 * @return
+	 */
+	public static UiObject GetTextObject(String text){
+		UiObject object = new UiObject(new UiSelector().text(text));
+		if(object.exists()){
+			return object; 
+		}else{
+			return null;
+		}
 	}
 	
 	
