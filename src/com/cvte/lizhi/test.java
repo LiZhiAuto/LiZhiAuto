@@ -2,12 +2,12 @@
 
 package com.cvte.lizhi;
 
-import android.os.RemoteException;
+
+import android.provider.Contacts.Intents.UI;
 
 import com.android.uiautomator.core.UiDevice;
 import com.android.uiautomator.core.UiObject;
 import com.android.uiautomator.core.UiObjectNotFoundException;
-import com.android.uiautomator.core.UiScrollable;
 import com.android.uiautomator.core.UiSelector;
 import com.android.uiautomator.testrunner.UiAutomatorTestCase;
 
@@ -25,11 +25,9 @@ public class test extends UiAutomatorTestCase {
 		// Simulate a short press on the HOME button.
 		// getUiDevice().pressHome();
 		Article article = new Article();
-	
+		My my = new My();
 		
 		uidevice = getUiDevice();
-		Constant.WriteLog(Constant.info,"-----------文章搜索UI验证-----------");
-		article.SearchArticleUICheck();
 		width = uidevice.getDisplayWidth();
 		height = uidevice.getDisplayHeight();
 		System.out.println(width+""+height);
@@ -41,17 +39,37 @@ public class test extends UiAutomatorTestCase {
 		// 然后在 Apps tab界面，模拟用户滑动到时钟应用的操作。
 		// 由于Apps界面是可以滚动的，所有用
 		// UiScrollable 对象.
-		UiScrollable appViews = new UiScrollable(new UiSelector().scrollable(true));
-
-		appViews.setAsHorizontalList();
-
-		UiObject settingsApp = appViews.getChildByText(
-				new UiSelector().className(android.widget.TextView.class.getName()), "立知");
+//		UiScrollable appViews = new UiScrollable(new UiSelector().scrollable(true));
+//
+//		appViews.setAsHorizontalList();
+//
+//		UiObject settingsApp = appViews.getChildByText(
+//				new UiSelector().className(android.widget.TextView.class.getName()), "立知");
+		
+		UiObject settingsApp = Constant.GetTextObject(Constant.application);
 		
 		settingsApp.clickAndWaitForNewWindow();
-		//sleep(300);
+		sleep(5000);
 		IsExistUpdate();
-		My my = new My();
+	
+		
+		
+		
+		
+		
+		
+		
+
+		Constant.WriteLog(Constant.info,"-----------修改用户信息功能验证-----------");
+		my.ModifyNickName();
+		my.ModifySex();
+		my.ModifySchool();
+		my.modifyCity();
+		my.modifyProfession();
+		
+		
+		
+		
 		
 
 		

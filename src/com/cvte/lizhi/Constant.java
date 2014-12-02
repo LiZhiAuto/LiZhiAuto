@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.android.uiautomator.core.UiObject;
+import com.android.uiautomator.core.UiObjectNotFoundException;
 import com.android.uiautomator.core.UiSelector;
 
 
@@ -102,6 +103,10 @@ public class Constant {
 	public static String LISTVIEW = "android.widget.ListView";
 	
 	public static String GRIDVIEW = "android.widget.GridView";
+	
+	public static String BUTTON = "android.widget.Button";
+	
+	public static String RADIOBUTTON = "android.widget.RadioButton";
 	/**
 	 * log 等级
 	 */
@@ -147,6 +152,32 @@ public class Constant {
 	}
 	
 	
+	/**
+	 * 获取objec对象的child
+	 * @param 
+	 * @return
+	 */
+	public static UiObject GetObjectChild(UiObject parent,String objectStr,int index) throws UiObjectNotFoundException{
+		
+		UiObject object = parent.getChild(new UiSelector().className(objectStr).instance(index));
+		if(object.exists()){
+			return object;
+		}else{
+			return null;
+		}
+	}
+	
+	
+	public static UiObject GetContainTextObject(String text){
+		UiObject object = new UiObject(new UiSelector().textContains(text));
+		if(object.exists()){
+			return object;
+		}else{
+			return null;
+		}
+	}
+	
+	
 	
 	
 	
@@ -158,4 +189,3 @@ public class Constant {
 
 
 }
-

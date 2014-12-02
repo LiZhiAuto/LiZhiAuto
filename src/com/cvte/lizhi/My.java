@@ -7,6 +7,7 @@ import com.android.uiautomator.core.UiObject;
 import com.android.uiautomator.core.UiObjectNotFoundException;
 import com.android.uiautomator.core.UiSelector;
 import com.android.uiautomator.testrunner.UiAutomatorTestCase;
+import com.cvte.lizhiUI.MyUI;
 
 public class My extends UiAutomatorTestCase {
 
@@ -16,6 +17,57 @@ public class My extends UiAutomatorTestCase {
 	public static final int CHINESEKEY =1;
 	public static final int PINYINKEY =2;
 
+	public MyUI myUI ;
+	public My() {
+		myUI = new MyUI();
+	}
+
+
+	/**
+	 * 进入个人信息编辑页面
+	 * @throws UiObjectNotFoundException
+	 */
+	public void EnterEditInfo() throws UiObjectNotFoundException{
+		//查找编辑个人信息按钮
+		UiObject editInfo = Constant.GetObject(Constant.IMAGEBUTTON, 0);
+		if(editInfo!=null){
+			editInfo.click();
+			Constant.WriteLog(Constant.info, "进入编辑个人信息页面");
+		}else{
+			Constant.WriteLog(Constant.fail, "未找到编辑个人信息按钮");
+		}
+	}
+	
+	
+	
+	/**
+	 * 点击返回按钮
+	 * @throws UiObjectNotFoundException
+	 */
+	public void Back() throws UiObjectNotFoundException{
+		UiObject back = Constant.GetObject(Constant.IMAGEVIEW, 0);
+		if(back!=null){
+			back.click();
+		}
+	}
+
+	/**
+	 * 进入我的页面判断是否登录
+	 * @param 
+	 * @return
+	 */
+	public void EnterMyPage() throws UiObjectNotFoundException{
+		UiObject my = Constant.GetTextObject(Constant.my);
+		if(my!=null){
+			my.click();
+		}
+		//判断当前是否为已登录状态
+		UiObject mailLogin = Constant.GetTextObject(Constant.mailLogin);
+		if(mailLogin!=null){
+			mailLogin.clickAndWaitForNewWindow();
+			LoginOn();
+		}
+	}
 
 	/**
 	 * 修改用户性别
@@ -24,31 +76,25 @@ public class My extends UiAutomatorTestCase {
 	 */
 	public void ModifySex() throws UiObjectNotFoundException{
 		EnterMyPage();
-		//查找编辑个人信息按钮
-		UiObject EditInfo = Constant.GetObject(Constant.IMAGEBUTTON, 0);
-		if(EditInfo!=null){
-			EditInfo.clickAndWaitForNewWindow();
-		}
-		
+		EnterEditInfo();
 		//首先先判断当前个人信息中的性别,并修改性别
-		UiObject SexTextView = new UiObject(new UiSelector().text(Constant.sex));
-		if(SexTextView.exists()){
-			UiObject Sex = SexTextView.getFromParent(new UiSelector().className(android.widget.TextView.class.getName()).index(1));
-			Constant.WriteLog(Constant.info, "当前的性别为"+Sex.getText()+"性");
+		UiObject sexTextView = Constant.GetObject(Constant.TEXTVIEW, 4);
+		if(sexTextView!=null){
+			UiObject sexTV = myUI.GetUnderSameParentObject(sexTextView, Constant.TEXTVIEW, 1);
+			Constant.WriteLog(Constant.info, "当前的性别为"+sexTV.getText()+"性");
 			String modifySex = "";
-			if(Sex.getText().equals(Constant.male)){
+			if(sexTV.getText().equals(Constant.male)){
 				Constant.WriteLog(Constant.info, "修改性别为"+Constant.female+"性");
 				modifySex = Constant.female;
 			}else{
 				Constant.WriteLog(Constant.info, "修改性别为"+Constant.male+"性");
 				modifySex  = Constant.male;
 			}
-			SexTextView.click();
+			sexTextView.click();
 
-			UiObject newSex = new UiObject(new UiSelector().text(modifySex));
+			UiObject newSex = Constant.GetTextObject(modifySex);
 			newSex.click();
-
-			if(Sex.getText().equals(modifySex)){
+			if(sexTV.getText().equals(modifySex)){
 				Constant.WriteLog(Constant.info, "修改性别成功");
 			}else{
 				Constant.WriteLog(Constant.fail, "修改性别失败");
@@ -56,8 +102,8 @@ public class My extends UiAutomatorTestCase {
 		}
 		//返回主界面
 
-		UiObject back = new UiObject(new UiSelector().className(android.widget.ImageView.class.getName()));
-		back.click();
+		Back();
+
 
 
 	}
@@ -72,18 +118,16 @@ public class My extends UiAutomatorTestCase {
 	public void ModifyNickName() throws UiObjectNotFoundException{
 
 		EnterMyPage();
-		//查找编辑个人信息按钮
-		UiObject EditInfo = new UiObject(new UiSelector().className(android.widget.ImageButton.class.getName()));
-		EditInfo.clickAndWaitForNewWindow();
+		EnterEditInfo();
 		//首先先判断当前个人信息中的性别,并修改性别
-		UiObject nickNameTextView = new UiObject(new UiSelector().text(Constant.nickName));
+		UiObject nickNameTextView = Constant.GetObject(Constant.TEXTVIEW, 2);
 		if(nickNameTextView.exists()){
-			UiObject nickNameInfo = nickNameTextView.getFromParent(new UiSelector().className(android.widget.TextView.class.getName()).index(1));
+			UiObject nickNameInfo = myUI.GetUnderSameParentObject(nickNameTextView, Constant.TEXTVIEW, 1);
 			String nickNameStr = nickNameInfo.getText(); 
 			Constant.WriteLog(Constant.info, "当前的昵称为"+nickNameStr);
 			nickNameTextView.clickAndWaitForNewWindow();
 			//设置空的昵称
-			UiObject nickName = new UiObject(new UiSelector().className(android.widget.EditText.class.getName()));
+			UiObject nickName = Constant.GetObject(Constant.EDITTEXT, 0);
 			Constant.WriteLog(Constant.info, "设置空昵称");
 			nickName.setText(" ");
 			if(IsEditInfoActivity(" ")){
@@ -91,7 +135,7 @@ public class My extends UiAutomatorTestCase {
 			}else{
 				Constant.WriteLog(Constant.info, "空昵称提交失败");
 				Constant.WriteLog(Constant.info, "昵称设置1个字符");
-				nickName.setText(Utf7ImeHelper.e("a"));
+				nickName.setText("a");
 				if(IsEditInfoActivity("a")){
 					Constant.WriteLog(Constant.info, "昵称设置1个字符成功");
 					nickNameTextView.clickAndWaitForNewWindow();
@@ -119,15 +163,12 @@ public class My extends UiAutomatorTestCase {
 				}else{
 					Constant.WriteLog(Constant.fail, "设置1个字符提交失败");
 				}
-				
+
 			}
-			
-			UiObject back = new UiObject(new UiSelector().className(android.widget.ImageView.class.getName()));
-			if(back.exists()){
-				back.click();
-			}
+
+			Back();
 		}
-		
+
 
 
 	}
@@ -143,12 +184,10 @@ public class My extends UiAutomatorTestCase {
 		String searchSchool = "安徽大学";
 		String searchSchoolPY = "ahdx";
 		EnterMyPage();
-		//查找编辑个人信息按钮
-		UiObject EditInfo = new UiObject(new UiSelector().className(android.widget.ImageButton.class.getName()));
-		EditInfo.clickAndWaitForNewWindow();
-		UiObject schoolTextView = new UiObject(new UiSelector().text(Constant.school));
-		if(schoolTextView.exists()){
-			UiObject schoolInfo = schoolTextView.getFromParent(new UiSelector().className(android.widget.TextView.class.getName()).index(1));
+		EnterEditInfo();
+		UiObject schoolTextView = Constant.GetObject(Constant.TEXTVIEW, 6);
+		if(schoolTextView!=null){
+			UiObject schoolInfo = myUI.GetUnderSameParentObject(schoolTextView, Constant.TEXTVIEW, 1);
 			String schoolName = schoolInfo.getText(); 
 			Constant.WriteLog(Constant.info, "当前的学校为"+schoolName);
 			schoolTextView.clickAndWaitForNewWindow();
@@ -170,10 +209,7 @@ public class My extends UiAutomatorTestCase {
 			}	
 		}
 		sleep(1000);
-		UiObject back = new UiObject(new UiSelector().className(android.widget.ImageView.class.getName()));
-		if(back.exists()){
-			back.click();
-		}
+		Back();
 	}
 
 
@@ -186,12 +222,10 @@ public class My extends UiAutomatorTestCase {
 		String searchCity = "哈尔滨";
 		String searchCityPY = "heb";
 		EnterMyPage();
-		//查找编辑个人信息按钮
-		UiObject EditInfo = new UiObject(new UiSelector().className(android.widget.ImageButton.class.getName()));
-		EditInfo.clickAndWaitForNewWindow();
-		UiObject cityTextView = new UiObject(new UiSelector().text(Constant.city));
-		if(cityTextView.exists()){
-			UiObject cityInfo = cityTextView.getFromParent(new UiSelector().className(android.widget.TextView.class.getName()).index(1));
+		EnterEditInfo();
+		UiObject cityTextView = Constant.GetObject(Constant.TEXTVIEW,8);
+		if(cityTextView!=null){
+			UiObject cityInfo = myUI.GetUnderSameParentObject(cityTextView, Constant.TEXTVIEW, 1);
 			String schoolName = cityInfo.getText(); 
 			Constant.WriteLog(Constant.info, "当前的城市为"+schoolName);
 			cityInfo.clickAndWaitForNewWindow();
@@ -213,10 +247,7 @@ public class My extends UiAutomatorTestCase {
 			}	
 		}
 
-		UiObject back = new UiObject(new UiSelector().className(android.widget.ImageView.class.getName()));
-		if(back.exists()){
-			back.click();
-		}
+		Back();
 	}
 
 
@@ -229,19 +260,17 @@ public class My extends UiAutomatorTestCase {
 		String searchProfession = "教育";
 		String searchProfessionPY = "jy";
 		EnterMyPage();
-		//查找编辑个人信息按钮
-		UiObject EditInfo = new UiObject(new UiSelector().className(android.widget.ImageButton.class.getName()));
-		EditInfo.clickAndWaitForNewWindow();
-		UiObject cityTextView = new UiObject(new UiSelector().text(Constant.profession));
-		if(cityTextView.exists()){
-			UiObject cityInfo = cityTextView.getFromParent(new UiSelector().className(android.widget.TextView.class.getName()).index(1));
+		EnterEditInfo();
+		UiObject professionTextView = Constant.GetObject(Constant.TEXTVIEW,10);
+		if(professionTextView!=null){
+			UiObject cityInfo = myUI.GetUnderSameParentObject(professionTextView, Constant.TEXTVIEW, 1);
 			String schoolName = cityInfo.getText(); 
 			Constant.WriteLog(Constant.info, "当前的目标行业为"+schoolName);
 			cityInfo.clickAndWaitForNewWindow();
 			String newSchool = ModifyInfo(SELECT_LISTVIEW_FIRST,"","");
 			if(cityInfo.getText().equals(newSchool)){
 				Constant.WriteLog(Constant.info, "设置目标行业成功");
-				cityTextView.clickAndWaitForNewWindow();
+				professionTextView.clickAndWaitForNewWindow();
 				Constant.WriteLog(Constant.info, "搜索"+searchProfession+"首字母并设置其为目标行业");
 				newSchool = ModifyInfo(PINYINKEY,searchProfessionPY,searchProfession);
 				if(newSchool.equals(searchProfession)){
@@ -255,10 +284,7 @@ public class My extends UiAutomatorTestCase {
 				Constant.WriteLog(Constant.fail, "设置目标行业失败");
 			}	
 		}
-		UiObject back = new UiObject(new UiSelector().className(android.widget.ImageView.class.getName()));
-		if(back.exists()){
-			back.click();
-		}
+		Back();
 	}
 
 
@@ -270,18 +296,18 @@ public class My extends UiAutomatorTestCase {
 	 */
 	public String ModifyInfo(int method,String searchKey,String chineseKey) throws UiObjectNotFoundException{
 		if(method==SELECT_LISTVIEW_FIRST){
-			UiObject listView = new UiObject(new UiSelector().className(android.widget.ListView.class.getName()));
-			UiObject item = listView.getChild(new UiSelector().className(android.widget.TextView.class.getName()).instance(0));
+			UiObject listView = Constant.GetObject(Constant.LISTVIEW, 0);
+			Constant.GetObjectChild(listView, Constant.TEXTVIEW, 0);
+			UiObject item = Constant.GetObjectChild(listView, Constant.TEXTVIEW, 0);
 			String newName = item.getText();
 			Constant.WriteLog(Constant.info, "设置"+newName);
 			item.click();
 			return newName;
 		}else if(method==PINYINKEY){
-			UiObject searchSchoolED = new UiObject(new UiSelector().className(android.widget.EditText.class.getName()));
-			UiObject listView = new UiObject(new UiSelector().className(android.widget.ListView.class.getName()));
-			searchSchoolED.setText(Utf7ImeHelper.e(searchKey));
-			UiObject item = listView.getChild(new UiSelector().className(android.widget.TextView.class.getName()).text(chineseKey));
-			if(item.exists()){
+			UiObject searchSchoolED = Constant.GetObject(Constant.EDITTEXT, 0);
+			searchSchoolED.setText(searchKey);
+			UiObject item = Constant.GetTextObject(chineseKey);
+			if(item!=null){
 				Constant.WriteLog(Constant.info, "搜索到"+chineseKey);
 				String newName = item.getText();
 				item.click();
@@ -306,27 +332,27 @@ public class My extends UiAutomatorTestCase {
 	 */
 	public void MyUICheck() throws UiObjectNotFoundException {
 		EnterMyPage();
-		UiObject userNameTV = new UiObject(new UiSelector().className(android.widget.TextView.class.getName()));
+		UiObject userNameTV = Constant.GetObject(Constant.TEXTVIEW, 0);
 		String userName = "";
-		if(userNameTV.exists()){
+		if(userNameTV!=null){
 			userName = userNameTV.getText();
 			Constant.WriteLog(Constant.info, "检测到当前的用户名为"+userName);
-			UiObject myInfoTv = new UiObject(new UiSelector().className(android.widget.TextView.class.getName()).textContains(Constant.point));
-			if(myInfoTv.exists()){
+			UiObject myInfoTv = Constant.GetContainTextObject(Constant.point);
+			if(myInfoTv!=null){
 				String myInfo = myInfoTv.getText();
 				String Array[] = myInfo.split("头");
 				String point[] = Array[0].split("：");
 				Constant.WriteLog(Constant.info, "检测到当前积分为"+point[1]);
 				String honor[] = Array[1].split("：");
 				Constant.WriteLog(Constant.info, "检测到当前头衔为"+honor[1]);
-				UiObject messageCenter = new UiObject(new UiSelector().className(android.widget.RadioButton.class.getName()).text(Constant.messageCenter));
-				if(messageCenter.exists()){
+				UiObject messageCenter = Constant.GetObject(Constant.RADIOBUTTON, 0);
+				if(messageCenter!=null&&messageCenter.getText().equals(Constant.messageCenter)){
 					Constant.WriteLog(Constant.info, "检测到"+Constant.messageCenter+"模块");
-					UiObject myCollect = new UiObject(new UiSelector().className(android.widget.RadioButton.class.getName()).text(Constant.myColect));
-					if(myCollect.exists()){
+					UiObject myCollect = Constant.GetObject(Constant.RADIOBUTTON, 1);
+					if(myCollect!=null&&myCollect.getText().equals(Constant.myColect)){
 						Constant.WriteLog(Constant.info, "检测到"+Constant.myColect+"模块");
-						UiObject userInfo = new UiObject(new UiSelector().className(android.widget.ImageButton.class.getName()));
-						if(userInfo.exists()){
+						UiObject userInfo = Constant.GetObject(Constant.IMAGEBUTTON, 0);
+						if(userInfo!=null){
 							Constant.WriteLog(Constant.info, "检测到个人资料编辑按钮");
 						}else{
 							Constant.WriteLog(Constant.fail, "未检测到个人资料编辑按钮");
@@ -350,21 +376,21 @@ public class My extends UiAutomatorTestCase {
 	}
 
 
+	/**
+	 * 编辑个人信息界面检查
+	 * @throws UiObjectNotFoundException
+	 */
 	public void EditMyInfoUICheck() throws UiObjectNotFoundException {
 		EnterMyPage();
 		//查找编辑个人信息按钮
-		UiObject EditInfo = new UiObject(new UiSelector().className(android.widget.ImageButton.class.getName()));
-		EditInfo.clickAndWaitForNewWindow();
-		if(CheckTextExist(Constant.headPortrait)){
-			if(CheckTextExist(Constant.nickName)){
-				if(CheckTextExist(Constant.sex)){
-					if(CheckTextExist(Constant.school)){
-						if(CheckTextExist(Constant.profession)){
-							if(CheckTextExist(Constant.city)){
-								UiObject back = new UiObject(new UiSelector().className(android.widget.ImageView.class.getName()));
-								if(back.exists()){
-									back.click();
-								}
+		EnterEditInfo();
+		if(CheckTextExist(Constant.headPortrait,1)){
+			if(CheckTextExist(Constant.nickName,2)){
+				if(CheckTextExist(Constant.sex,4)){
+					if(CheckTextExist(Constant.school,6)){
+						if(CheckTextExist(Constant.profession,8)){
+							if(CheckTextExist(Constant.city,10)){
+								Back();
 							}
 						}
 					}
@@ -372,42 +398,28 @@ public class My extends UiAutomatorTestCase {
 			}
 		}
 	}
-	
-	
+
+
 	/**
 	 * 用来判断具有文本内容的UI是否存在
 	 * @return
+	 * @throws UiObjectNotFoundException 
 	 */
-	public boolean CheckTextExist(String searchKey){
-		
-		UiObject searchUI = new UiObject(new UiSelector().text(searchKey));
-		if(searchUI.exists()){
+	public boolean CheckTextExist(String searchKey,int index) throws UiObjectNotFoundException{
+		UiObject searchUI = Constant.GetObject(Constant.TEXTVIEW, index);
+		if(searchUI!=null&&searchUI.getText().equals(searchKey)){
 			Constant.WriteLog(Constant.info, "检测到"+searchKey);
 			return true;
 		}else{
 			Constant.WriteLog(Constant.info, "未检测到"+searchKey);
 			return false;
 		}
-		
+
 	}
-	
 
 
-	/**
-	 * 进入我的页面判断是否登录
-	 * @param 
-	 * @return
-	 */
-	public void EnterMyPage() throws UiObjectNotFoundException{
-		UiObject my = new UiObject(new UiSelector().text(Constant.my)); 
-		my.click();
-		//判断当前是否为已登录状态
-		UiObject mailLogin = new UiObject(new UiSelector().text(Constant.mailLogin));
-		if(mailLogin.exists()){
-			mailLogin.clickAndWaitForNewWindow();
-			LoginOn();
-		}
-	}
+
+
 
 
 	/**
@@ -417,21 +429,16 @@ public class My extends UiAutomatorTestCase {
 	 * @throws UiObjectNotFoundException
 	 */
 	public boolean IsEditInfoActivity(String str) throws UiObjectNotFoundException {
-		UiObject complete = new UiObject(new UiSelector().text(Constant.complete));
+		UiObject complete = Constant.GetObject(Constant.TEXTVIEW, 1);
 		complete.clickAndWaitForNewWindow();
-		UiObject editInfo = new UiObject(new UiSelector().text(Constant.editInfo));
-		if(editInfo.exists()){
-			UiObject nickNameTextView = new UiObject(new UiSelector().text(Constant.nickName));
-			if(nickNameTextView.exists()){
-				UiObject nickNameInfo = nickNameTextView.getFromParent(new UiSelector().className(android.widget.TextView.class.getName()).index(1));
+		UiObject editText = Constant.GetObject(Constant.EDITTEXT, 0);
+		if(editText==null){
+				UiObject nickNameInfo = Constant.GetObject(Constant.TEXTVIEW, 3);
 				if(nickNameInfo.getText().equals(str)){
 					return true;
 				}else{
 					return  false;
 				}
-			}else{
-				return false;
-			}
 		}else{
 			return false;
 		}
@@ -442,17 +449,11 @@ public class My extends UiAutomatorTestCase {
 	 */
 	public void LoginOn(){
 		try {
-			UiObject mailEdit = new UiObject(new UiSelector().text("邮箱"));
-
-			mailEdit.setText("411249087@qq.com");
-
-			UiObject passwordEdit  = new UiObject(new UiSelector().className("android.widget.EditText").focused(false));
-
-			passwordEdit.setText("123456");
-
-
-			UiObject login = new UiObject(new UiSelector().text("登录"));
-
+			UiObject mailEdit = Constant.GetTextObject(Constant.mail);
+			mailEdit.setText(Constant.userName);
+			UiObject passwordEdit  = Constant.GetObject(Constant.EDITTEXT, 1);
+			passwordEdit.setText(Constant.password);
+			UiObject login = Constant.GetTextObject(Constant.login);
 			login.clickAndWaitForNewWindow();
 		} catch (UiObjectNotFoundException e) {
 			e.printStackTrace();
