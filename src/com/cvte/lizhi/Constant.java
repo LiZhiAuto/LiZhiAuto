@@ -1,5 +1,6 @@
 package com.cvte.lizhi;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -119,9 +120,20 @@ public class Constant {
 		
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
 		// new Date()为获取当前系统时间
+		SimpleDateFormat dftemp = new SimpleDateFormat("HH-mm-ss");
+		if(Level.equals(fail)){
+			File f = new File("/mnt/sdcard/LiZhiAutoScreenShot/") ;
+			if(!f.exists()){
+				f.mkdir();
+			}
+			f = new File("/mnt/sdcard/LiZhiAutoScreenShot/"+dftemp.format(new Date())+".png") ;
+		    test.uidevice.takeScreenshot(f);
+		}
 		
 		System.out.println(df.format(new Date())+":"+Level+"------"+str);
 	}
+	
+	
 	
 	/**
 	 * 返回一个索引值为index,class为objectStr的object

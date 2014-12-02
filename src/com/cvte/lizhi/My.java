@@ -1,11 +1,7 @@
 package com.cvte.lizhi;
 
-import jp.jun_nama.test.utf7ime.helper.Utf7ImeHelper;
-
-
 import com.android.uiautomator.core.UiObject;
 import com.android.uiautomator.core.UiObjectNotFoundException;
-import com.android.uiautomator.core.UiSelector;
 import com.android.uiautomator.testrunner.UiAutomatorTestCase;
 import com.cvte.lizhiUI.MyUI;
 

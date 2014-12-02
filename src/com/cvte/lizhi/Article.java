@@ -6,6 +6,7 @@ import android.os.RemoteException;
 
 import com.android.uiautomator.core.UiObject;
 import com.android.uiautomator.core.UiObjectNotFoundException;
+import com.android.uiautomator.core.UiSelector;
 import com.android.uiautomator.testrunner.UiAutomatorTestCase;
 import com.cvte.lizhiUI.ArticleUI;
 
@@ -14,11 +15,9 @@ public class Article extends UiAutomatorTestCase {
 
 	public  int TOTALNUM = 140;
 
-	private int TITLE = 2;
+	private int TITLE = 0;
 	private int CHANNEL = 1;
-	private int DATE = 0;
-
-
+	private int DATE = 2;
 	/**
 	 * 弹出框形式的登录操作
 	 */
@@ -40,7 +39,7 @@ public class Article extends UiAutomatorTestCase {
 				}
 			}
 		} catch (UiObjectNotFoundException e) {
-
+			
 			e.printStackTrace();
 
 		}
@@ -85,7 +84,7 @@ public class Article extends UiAutomatorTestCase {
 	 */
 	public String  ArticalItem(int index){
 		try {
-			UiObject article = Constant.GetObject(Constant.RADIOBUTTON, 0);
+			UiObject article = Constant.GetTextObject(Constant.article);
 			article.click();
 			UiObject textView = ArticleUI.GetAricleTitle(index,TITLE);
 			if(textView!=null){
@@ -113,18 +112,18 @@ public class Article extends UiAutomatorTestCase {
 	 * @return
 	 */
 	public void ArticleUICheck() throws UiObjectNotFoundException{
-
-		UiObject article = Constant.GetObject(Constant.RADIOBUTTON, 0); 
+		
+		
+		UiObject article = Constant.GetTextObject(Constant.article); 
 		if(article!=null){
 			article.click();
 			UiObject all = Constant.GetTextObject(Constant.all);
 			if(all!=null){
 				//列表中的标题查看
 				UiObject listview = Constant.GetObject(Constant.LISTVIEW, 0);
-				for(int i=1;i<listview.getChildCount();i++){
+				for(int i=2;i<listview.getChildCount()-1;i++){
 					UiObject title = ArticleUI.GetAricleTitle(i, TITLE);
 					Constant.WriteLog(Constant.info, "第"+i+"条的标题为      "+title.getText());
-
 					//列表中的所在频道
 					UiObject Channel = ArticleUI.GetAricleTitle(i, CHANNEL);
 					Constant.WriteLog(Constant.info, "第"+i+"条的频道为      "+Channel.getText());
@@ -195,6 +194,7 @@ public class Article extends UiAutomatorTestCase {
 
 							UiObject textview = Constant.GetTextObject(title);
 							if(textview!=null){
+								Constant.WriteLog(Constant.info, textview.getText());
 								Constant.WriteLog(Constant.fail, "文章取消收藏失败");
 							}else{
 								Constant.WriteLog(Constant.info, "文章已取消收藏");
@@ -230,7 +230,7 @@ public class Article extends UiAutomatorTestCase {
 	 */
 	public void SearchArticleUICheck() throws UiObjectNotFoundException{
 
-		UiObject article =Constant.GetObject(Constant.RADIOBUTTON, 0);
+		UiObject article =Constant.GetTextObject(Constant.article);
 		article.click();
 		/**
 		 * 点击搜索按钮
@@ -295,7 +295,7 @@ public class Article extends UiAutomatorTestCase {
 
 		try {
 			//	String str = "";
-			UiObject article = Constant.GetObject(Constant.RADIOBUTTON, 0); 
+			UiObject article = Constant.GetTextObject(Constant.article); 
 			article.click();
 			//点击搜索按钮
 			UiObject searchImage=Constant.GetObject(Constant.IMAGEVIEW, 0);

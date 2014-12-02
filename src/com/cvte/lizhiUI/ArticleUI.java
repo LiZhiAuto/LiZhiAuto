@@ -19,12 +19,19 @@ public class ArticleUI extends UiAutomatorTestCase{
 	public static UiObject GetAricleTitle(int index,int Type) throws UiObjectNotFoundException{
 		UiObject listview = Constant.GetObject(Constant.LISTVIEW, 0);
 		if(listview!=null){
-			UiObject textView = listview.getChild(new UiSelector().className(Constant.TEXTVIEW).instance(3*index-Type));
-			if(textView.exists()){
-				return textView;
+			
+			UiObject listViewItem = listview.getChild(new UiSelector().clickable(true).index(index));
+			if(listViewItem.exists()){
+				UiObject textView = listViewItem.getChild(new UiSelector().className(Constant.TEXTVIEW).instance(Type));
+				if(textView.exists()){
+					return textView;
+				}else{
+					return null;
+					
+				}
 			}else{
 				return null;
-			}
+			}	
 		}else{
 			return null;
 		}
