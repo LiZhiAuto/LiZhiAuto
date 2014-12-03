@@ -3,9 +3,6 @@
 package com.cvte.lizhi;
 
 
-import java.io.File;
-
-import android.provider.Contacts.Intents.UI;
 
 import com.android.uiautomator.core.UiDevice;
 import com.android.uiautomator.core.UiObject;
@@ -42,18 +39,29 @@ public class test extends UiAutomatorTestCase {
 		// 然后在 Apps tab界面，模拟用户滑动到时钟应用的操作。
 		// 由于Apps界面是可以滚动的，所有用
 		// UiScrollable 对象.
-	//	UiScrollable appViews = new UiScrollable(new UiSelector().scrollable(true));
-//
-//		appViews.setAsHorizontalList();
-//
-//		UiObject settingsApp = appViews.getChildByText(
-//				new UiSelector().className(android.widget.TextView.class.getName()), "立知");
-		
-		UiObject settingsApp = Constant.GetTextObject(Constant.application);
-		
+		UiObject settingsApp = null;
+		UiScrollable appViews = new UiScrollable(new UiSelector().scrollable(true));
+		if(appViews.exists()){
+			appViews.setAsHorizontalList();
+			settingsApp = appViews.getChildByText(
+					new UiSelector().className(android.widget.TextView.class.getName()), Constant.application);
+		}else{
+			settingsApp = Constant.GetTextObject(Constant.application);
+		}
 		settingsApp.clickAndWaitForNewWindow();
 		sleep(5000);
 		IsExistUpdate();
+		
+		
+		
+		Constant.WriteLog(Constant.info,"-----------文章评论功能验证-----------");
+		article.ArticleComment(INDEX);
+	
+		article.ArticleCommentUICheck(INDEX);
+		
+		
+		Constant.WriteLog(Constant.info,"-----------文章专题UI验证-----------");
+		article.TopicCheckAndTraversal();
 		Constant.WriteLog(Constant.info,"-----------文章全部列表UI验证-----------");
 		article.ArticleUICheck();
 		Constant.WriteLog(Constant.info,"-----------文章点赞及取消点赞功能验证-----------");
@@ -70,12 +78,12 @@ public class test extends UiAutomatorTestCase {
 		article.SearchArticleUICheck();
 		Constant.WriteLog(Constant.info,"-----------文章搜索功能验证-----------");
 		article.SearchArticle();
+		Constant.WriteLog(Constant.info,"-----------文章评论功能验证-----------");
+		article.ArticleComment(INDEX);
 		Constant.WriteLog(Constant.info,"-----------文章评论点赞功能验证-----------");
 		article.ArticleCommentPraise(INDEX);
-//		Constant.WriteLog(Constant.info,"-----------文章评论功能验证-----------");
-//		article.ArticleComment(INDEX);
-//		Constant.WriteLog(Constant.info,"-----------评论文章的评论功能验证-----------");
-//		article.ArticleCommentOtherComment(INDEX);
+		Constant.WriteLog(Constant.info,"-----------评论文章的评论功能验证-----------");
+		article.ArticleCommentOtherComment(INDEX);
 		Constant.WriteLog(Constant.info,"-----------我的页面界面验证-----------");
 		my.MyUICheck();
 		Constant.WriteLog(Constant.info,"-----------编辑个人信息界面验证-----------");	

@@ -3,10 +3,9 @@ package com.cvte.lizhi;
 
 
 import android.os.RemoteException;
-
 import com.android.uiautomator.core.UiObject;
 import com.android.uiautomator.core.UiObjectNotFoundException;
-import com.android.uiautomator.core.UiSelector;
+import com.android.uiautomator.core.UiScrollable;
 import com.android.uiautomator.testrunner.UiAutomatorTestCase;
 import com.cvte.lizhiUI.ArticleUI;
 
@@ -18,6 +17,8 @@ public class Article extends UiAutomatorTestCase {
 	private int TITLE = 0;
 	private int CHANNEL = 1;
 	private int DATE = 2;
+
+	private String[] topics = {"全部","有效率","会说话","爱打扮","找工作","长见识","走心"};
 	/**
 	 * 弹出框形式的登录操作
 	 */
@@ -39,7 +40,7 @@ public class Article extends UiAutomatorTestCase {
 				}
 			}
 		} catch (UiObjectNotFoundException e) {
-			
+
 			e.printStackTrace();
 
 		}
@@ -48,32 +49,56 @@ public class Article extends UiAutomatorTestCase {
 
 
 	/**
+	 * 点击返回按钮
+	 * @throws UiObjectNotFoundException
+	 */
+	public void Back() throws UiObjectNotFoundException{
+		UiObject back = Constant.GetObject(Constant.IMAGEVIEW, 0);
+		if(back!=null){
+			back.click();
+		}
+	}
+
+	/**
 	 * 专题检查
 	 * @throws UiObjectNotFoundException
 	 */
-	//	public void TopicCheckAndTraversal() throws UiObjectNotFoundException{
-	//		UiObject horizontal = new UiObject(new UiSelector().className("android.widget.HorizontalScrollView"));
-	//		Constant.WriteLog(Constant.info,"找到专题列表"+horizontal.getChildCount());
-	//		if(horizontal.exists()){
-	//			UiObject linearLayout = horizontal.getChild(new UiSelector().index(0));
-	//			if(linearLayout.exists()){
-	//				for(int i=0;i<linearLayout.getChildCount();i++){
-	//					UiObject topicTV = new UiObject(new UiSelector().className(android.widget.TextView.class.getName()).instance(i));
-	//					if(topicTV.exists()){
-	//						Constant.WriteLog(Constant.info,"检测到专题"+topicTV.getText()+"并点击");
-	////						topicTV.click();
-	////						UiObject listView = new UiObject(new UiSelector().className(android.widget.ListView.class.getName()));
-	////						if(listView.exists()){
-	////							UiObject textView = listView.getChild(new UiSelector().clickable(true).index(2)).getChild(new UiSelector().className(android.widget.TextView.class.getName()));
-	////							Constant.WriteLog(Constant.info, "第"+2+"条的标题为      "+textView.getText().toString());
-	////						}
-	//					}
-	//				}
-	//			}
-	//		}else{
-	//			Constant.WriteLog(Constant.fail,"未找到专题列表");
-	//		}
-	//	}
+	public void TopicCheckAndTraversal() throws UiObjectNotFoundException{
+		UiScrollable topicObject = Constant.GetScrollableObject(Constant.VIEWPAGER);
+		if(topicObject!=null){
+			topicObject.setAsHorizontalList();
+			Constant.WriteLog(Constant.info, "滑动查看专题内容");
+			int temp = 0;
+			do{
+				UiObject topicTitle = ArticleUI.GetTopicTitle();
+				if(topicTitle!=null){
+					Constant.WriteLog(Constant.info, "进入专题"+"\""+topicTitle.getText()+"\"");
+					if(!topicTitle.getText().equals(topics[temp])){
+						Constant.WriteLog(Constant.fail, "专题内容 "+topicTitle.getText()+" 与实际专题内容 "+topics[temp]+" 不一致");
+					}
+				}else{
+					Constant.WriteLog(Constant.fail, "未找到专题内容");
+				}
+				temp += 1;
+			}while(topicObject.scrollForward(15));
+			UiObject topicTitle = ArticleUI.GetTopicTitle();
+			Constant.WriteLog(Constant.info, "专题"+"\""+topicTitle.getText()+"\"");
+			//列表中的标题查看
+			UiObject listview = Constant.GetObject(Constant.LISTVIEW, 0);
+			for(int i=2;i<listview.getChildCount()-1;i++){
+				UiObject title = ArticleUI.GetListViewContent(i, TITLE);
+				Constant.WriteLog(Constant.info, "第"+i+"条的标题为      "+title.getText());
+				//列表中的日期
+				UiObject date = ArticleUI.GetListViewContent(i, CHANNEL);
+				Constant.WriteLog(Constant.info, "第"+i+"条的时间为      "+date.getText());
+			}
+
+		}else{
+			Constant.WriteLog(Constant.fail, "当前页面非立知首页");
+
+		}
+
+	}
 
 
 
@@ -85,12 +110,13 @@ public class Article extends UiAutomatorTestCase {
 	public String  ArticalItem(int index){
 		try {
 			UiObject article = Constant.GetTextObject(Constant.article);
-			article.click();
-			UiObject textView = ArticleUI.GetAricleTitle(index,TITLE);
+			article.clickAndWaitForNewWindow();
+			UiObject textView = ArticleUI.GetListViewContent(index,TITLE);
 			if(textView!=null){
 				String title = textView.getText();
 				Constant.WriteLog(Constant.info, "所点击的文章标题为"+textView.getText());
 				textView.clickAndWaitForNewWindow();
+				sleep(2000);
 				return title;
 			}else{
 				Constant.WriteLog(Constant.fail,"未找到文章标题");
@@ -112,29 +138,34 @@ public class Article extends UiAutomatorTestCase {
 	 * @return
 	 */
 	public void ArticleUICheck() throws UiObjectNotFoundException{
-		
-		
+
+		//这里先判断专题是否在全部处
 		UiObject article = Constant.GetTextObject(Constant.article); 
 		if(article!=null){
 			article.click();
-			UiObject all = Constant.GetTextObject(Constant.all);
-			if(all!=null){
+			UiScrollable topicObject = Constant.GetScrollableObject(Constant.VIEWPAGER);
+			if(topicObject!=null){
+				topicObject.setAsHorizontalList();
+				UiObject selectedTV =ArticleUI.GetTopicTitle();;
+				while (selectedTV==null||!(selectedTV.getText().equals(Constant.all))){
+					topicObject.scrollBackward(15);
+				}
 				//列表中的标题查看
 				UiObject listview = Constant.GetObject(Constant.LISTVIEW, 0);
 				for(int i=2;i<listview.getChildCount()-1;i++){
-					UiObject title = ArticleUI.GetAricleTitle(i, TITLE);
+					UiObject title = ArticleUI.GetListViewContent(i, TITLE);
 					Constant.WriteLog(Constant.info, "第"+i+"条的标题为      "+title.getText());
 					//列表中的所在频道
-					UiObject Channel = ArticleUI.GetAricleTitle(i, CHANNEL);
+					UiObject Channel = ArticleUI.GetListViewContent(i, CHANNEL);
 					Constant.WriteLog(Constant.info, "第"+i+"条的频道为      "+Channel.getText());
-
 					//列表中的日期
-					UiObject date = ArticleUI.GetAricleTitle(i, DATE);
+					UiObject date = ArticleUI.GetListViewContent(i, DATE);
 					Constant.WriteLog(Constant.info, "第"+i+"条的时间为      "+date.getText());
-
-
 				}
+
 			}
+
+
 		}
 
 
@@ -405,17 +436,6 @@ public class Article extends UiAutomatorTestCase {
 	public boolean HistorySearch() throws UiObjectNotFoundException{
 		//通过点击搜索历史的关键字进行查找
 		String str = "";
-		UiObject back = Constant.GetObject(Constant.IMAGEBUTTON, 0);
-		if(back!=null){
-			back.click();
-		}
-
-		/**
-		 * 点击搜索按钮
-		 */
-		//点击搜索按钮
-		UiObject searchImage=Constant.GetObject(Constant.IMAGEVIEW, 0);
-		searchImage.clickAndWaitForNewWindow();	
 		UiObject listView = Constant.GetObject(Constant.LISTVIEW, 0);
 		if(listView!=null){
 
@@ -433,7 +453,7 @@ public class Article extends UiAutomatorTestCase {
 						Constant.WriteLog(Constant.info, "点击阅读文章"+searchArticle.getText());
 						searchArticle.clickAndWaitForNewWindow();
 						//直接返回
-						back = Constant.GetObject(Constant.IMAGEVIEW, 0);
+						UiObject back = Constant.GetObject(Constant.IMAGEVIEW, 0);
 						if(back!=null){
 							back.click();
 						}
@@ -616,61 +636,103 @@ public class Article extends UiAutomatorTestCase {
 			Constant.WriteLog(Constant.info, "空评论发表失败");
 		}
 
-		Constant.WriteLog(Constant.info, "填写内容超过140个字符");
+//		Constant.WriteLog(Constant.info, "填写内容超过140个字符");
 		UiObject commentEditText = Constant.GetObject(Constant.EDITTEXT, 0);
-		commentEditText.setText(Constant.longString);
-		if(!publicTextView.isClickable()){
-			Constant.WriteLog(Constant.info, "填写内容超过140个字符时，发表按钮变灰");
-		}else{
-			Constant.WriteLog(Constant.info, "填写内容超过140个字符时，发表按钮未变成灰色");
-		}
-		Constant.WriteLog(Constant.info, "填写内容\"good\"");
-		commentEditText.clearTextField();
-		commentEditText.clearTextField();
-		commentEditText.clearTextField();
-		commentEditText.setText("good");
+//		commentEditText.setText(Constant.longString);
+//		if(!publicTextView.isClickable()){
+//			Constant.WriteLog(Constant.info, "填写内容超过140个字符时，发表按钮变灰");
+//		}else{
+//			Constant.WriteLog(Constant.info, "填写内容超过140个字符时，发表按钮未变成灰色");
+//		}
+//		Constant.WriteLog(Constant.info, "填写内容当前的系统时间");
+//		commentEditText.clearTextField();
+//		commentEditText.clearTextField();
+//		commentEditText.clearTextField();
+		String nowTime = Constant.GetSystemTime();
+		commentEditText.setText(nowTime);
 
 		//获取输入内容后，允许字符剩余多少
 		UiObject limitNum = Constant.GetObject(Constant.TEXTVIEW, 2);
 		int changNum = Integer.valueOf(limitNum.getText()).intValue();
 		Constant.WriteLog(Constant.info, "剩余字数为"+changNum);
-		if(TOTALNUM-changNum==4){
+		if(TOTALNUM-changNum==nowTime.length()){
 			Constant.WriteLog(Constant.info, "符合字数变化规则");
 		}else{
 			Constant.WriteLog(Constant.fail, "不符合字数变化规则");
 			return ;
 		}
 		//点击发表
-		publicTextView.click();
+		publicTextView.clickAndWaitForNewWindow();
+		sleep(2000);
 		//获取第一个评论的内容,这里多个判断是由于可能用户是未填写学校的情况
 		UiObject listview = Constant.GetObject(Constant.LISTVIEW, 0);
 		UiObject commentDetail = ArticleUI.GetCommentDetail(listview, 1);
 		UiObject content = Constant.GetObjectChild(commentDetail, Constant.TEXTVIEW, 3);
 		Constant.WriteLog(Constant.info, "列表第一条评论为"+content.getText().toString()); 
-		if(content.getText().equals("good")){
+		if(content.getText().equals(nowTime)){
 			Constant.WriteLog(Constant.info, "与发表的评论内容相同，评论发表成功"); 
+			DeleteComment(commentDetail);
 		}else{
-			content = Constant.GetObjectChild(commentDetail, Constant.TEXTVIEW,2);
-			if(content.getText().toString().equals("good")){
-				Constant.WriteLog(Constant.info, "与发表的评论内容相同，评论发表成功"); 
-			}else{
-				Constant.WriteLog(Constant.fail, "与发表的评论内容不相同，评论发表失败");
-
-			}
-
+			Constant.WriteLog(Constant.fail, "与发表的评论内容不相同，评论发表失败");
+//			content = Constant.GetObjectChild(commentDetail, Constant.TEXTVIEW,2);
+//			if(content.getText().toString().equals(nowTime)){
+//				Constant.WriteLog(Constant.info, "与发表的评论内容相同，评论发表成功"); 
+//				DeleteComment(commentDetail);
+//			}else{
+//				Constant.WriteLog(Constant.fail, "与发表的评论内容不相同，评论发表失败");
+//			}
 		}
 
 		//返回至主界面
-
 		UiObject back = Constant.GetObject(Constant.IMAGEVIEW, 0);
 		if(back!=null){
 			back.click();
 			back.click();
 		}
-
-
 	}
 
+	
+	/**
+	 * 删除评论
+	 * @param object
+	 * @throws UiObjectNotFoundException
+	 */
+	public void DeleteComment(UiObject object) throws UiObjectNotFoundException{
+		String commentContent = ArticleUI.GetCommentContent(1);
+		for(int i=0;i<2;i++){
+			object.longClick();
+			UiObject delete = Constant.GetTextObject(Constant.delete);
+			if(delete!=null){
+				delete.click();
+				if(i==0){
+					UiObject cancel = Constant.GetTextObject(Constant.cancel);
+					if(cancel!=null){
+						cancel.click();
+						if(commentContent.equals(ArticleUI.GetCommentContent(1))){
+							Constant.WriteLog(Constant.fail, "取消删除评论成功");
+						}else{
+							Constant.WriteLog(Constant.info, "取消删除评论失败");
+						}
+					}
+				}else{
+					UiObject confirm = Constant.GetTextObject(Constant.confirm);
+					if(confirm!=null){
+						confirm.click();
+						if(commentContent.equals(ArticleUI.GetCommentContent(1))){
+							Constant.WriteLog(Constant.fail, "删除评论失败");
+						}else{
+							Constant.WriteLog(Constant.info, "删除评论成功");
+						}
+					}
+				}
+				
+			}else{
+				Constant.WriteLog(Constant.fail, "未找到删除按钮");
+			}
+		}
+		
+		
+	}
 
 
 	/**
@@ -687,13 +749,32 @@ public class Article extends UiAutomatorTestCase {
 
 
 	/**
+	 * 文章评论列表UI查看
+	 * @param index
+	 * @throws UiObjectNotFoundException
+	 */
+	public void ArticleCommentUICheck(int index) throws UiObjectNotFoundException{
+		ArticalItem(index);
+		UiObject commentBt = Constant.GetObject(Constant.IMAGEBUTTON, 1);
+		if(commentBt!=null){
+			commentBt.clickAndWaitForNewWindow();
+			ArticleUI.GetCommentListUI();
+			Back();
+		}else{
+			Constant.WriteLog(Constant.fail, "未找到评论按钮");
+		}
+		Back();
+	}
+
+	/**
 	 * 文章评论点赞取消点赞
 	 * @param 
 	 * @return
 	 */
 	public void ArticleCommentPraise(int index) throws UiObjectNotFoundException {
-		ArticalItem(index);
 
+		ArticalItem(index);
+		IsCommentEmpty(index);
 		//找到评论按钮
 		UiObject comment= Constant.GetObject(Constant.IMAGEBUTTON, 1);
 		comment.clickAndWaitForNewWindow();
@@ -747,7 +828,25 @@ public class Article extends UiAutomatorTestCase {
 				}
 
 			}
+		}
+	}
 
+	/**
+	 * 判断是否评论为空
+	 * @param index
+	 * @throws UiObjectNotFoundException
+	 */
+	public void IsCommentEmpty(int index) throws UiObjectNotFoundException{
+		UiObject commentNum  = Constant.GetObject(Constant.TEXTVIEW, 1);
+		if(commentNum!=null){
+			Constant.WriteLog(Constant.info, commentNum.getText());
+		}
+		int repeat = 0;
+		//首先判断文章的评论数是否为0
+		while(commentNum.getText().equals("0")){
+			repeat = repeat+1;
+			Back();
+			ArticalItem(index+repeat);
 		}
 	}
 
@@ -759,7 +858,7 @@ public class Article extends UiAutomatorTestCase {
 	 */
 	public void ArticleCommentOtherComment(int index) throws UiObjectNotFoundException{
 		ArticalItem(index);
-
+		IsCommentEmpty(index);
 		//找到评论按钮
 		UiObject comment= Constant.GetObject(Constant.IMAGEBUTTON, 1);
 		comment.clickAndWaitForNewWindow();
@@ -772,7 +871,6 @@ public class Article extends UiAutomatorTestCase {
 		String commentedName = commentedNameTV.getText();
 		UiObject commentedContentTV = null;  
 		//若单纯为用户评论，无引用他人评论时
-
 		commentedContentTV =ArticleUI.GetCommentContent(commentDetail);
 		String commentedContent = commentedContentTV.getText(); 
 		Constant.WriteLog(Constant.info, "对姓名为\""+commentedName+"\",内容为\""+commentedContent+"\"的评论进行评论");
@@ -797,9 +895,9 @@ public class Article extends UiAutomatorTestCase {
 		editText.setText(Constant.commentContent);
 		UiObject publicButton = Constant.GetTextObject(Constant.pubic);
 		publicButton.click();
-		if(isCommentOtherCommentSuccess(commentedName, commentedContent, Constant.pubic)){
+		if(IsCommentOtherCommentSuccess(commentedName, commentedContent, Constant.pubic)){
 			RefreshListView();
-			isCommentOtherCommentSuccess(commentedName, commentedContent, "刷新");
+			IsCommentOtherCommentSuccess(commentedName, commentedContent, "刷新");
 		}
 
 		//找到主界面
@@ -822,10 +920,10 @@ public class Article extends UiAutomatorTestCase {
 	 * @return
 	 * @throws UiObjectNotFoundException
 	 */
-	public boolean isCommentOtherCommentSuccess(String commentedName,String commentedContent,String Mehod) throws UiObjectNotFoundException{
+	public boolean IsCommentOtherCommentSuccess(String commentedName,String commentedContent,String Mehod) throws UiObjectNotFoundException{
 		UiObject listview = Constant.GetObject(Constant.LISTVIEW, 0);
 		UiObject commentDetail = ArticleUI.GetCommentDetail(listview, 1);
-		
+
 		//比较第一条内容中评论内容是否为刚回复的内容
 		UiObject commentedContentTV =ArticleUI.GetCommentContent(commentDetail);
 

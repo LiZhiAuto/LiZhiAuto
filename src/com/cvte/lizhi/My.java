@@ -219,7 +219,7 @@ public class My extends UiAutomatorTestCase {
 		String searchCityPY = "heb";
 		EnterMyPage();
 		EnterEditInfo();
-		UiObject cityTextView = Constant.GetObject(Constant.TEXTVIEW,8);
+		UiObject cityTextView = Constant.GetObject(Constant.TEXTVIEW,10);
 		if(cityTextView!=null){
 			UiObject cityInfo = myUI.GetUnderSameParentObject(cityTextView, Constant.TEXTVIEW, 1);
 			String schoolName = cityInfo.getText(); 
@@ -257,7 +257,7 @@ public class My extends UiAutomatorTestCase {
 		String searchProfessionPY = "jy";
 		EnterMyPage();
 		EnterEditInfo();
-		UiObject professionTextView = Constant.GetObject(Constant.TEXTVIEW,10);
+		UiObject professionTextView = Constant.GetObject(Constant.TEXTVIEW,8);
 		if(professionTextView!=null){
 			UiObject cityInfo = myUI.GetUnderSameParentObject(professionTextView, Constant.TEXTVIEW, 1);
 			String schoolName = cityInfo.getText(); 

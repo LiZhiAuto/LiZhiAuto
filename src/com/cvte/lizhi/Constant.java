@@ -6,7 +6,9 @@ import java.util.Date;
 
 import com.android.uiautomator.core.UiObject;
 import com.android.uiautomator.core.UiObjectNotFoundException;
+import com.android.uiautomator.core.UiScrollable;
 import com.android.uiautomator.core.UiSelector;
+import com.cvte.lizhiUI.ArticleUI;
 
 
 public class Constant {
@@ -89,9 +91,13 @@ public class Constant {
 	
 	public static String confirm = "确定";
 	
+	public static String cancel = "取消";
+	
 	public static String back = "返回";
 	
 	public static String application = "立知";
+	
+	public static String delete = "删除";
 
 	public static String IMAGEVIEW = "android.widget.ImageView";
 	
@@ -108,6 +114,8 @@ public class Constant {
 	public static String BUTTON = "android.widget.Button";
 	
 	public static String RADIOBUTTON = "android.widget.RadioButton";
+	
+	public static String VIEWPAGER = "android.support.v4.view.ViewPager";
 	/**
 	 * log 等级
 	 */
@@ -116,21 +124,38 @@ public class Constant {
 	public static String dbug = "DEBUG";
 	public static String fail = "FAIL";
 	
+	
+	
+	
+	/**
+	 * log打印以及失败的情况下会截取当前屏幕
+	 * @param Level
+	 * @param str
+	 */
 	public static void WriteLog(String Level,String str){
 		
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
-		// new Date()为获取当前系统时间
-		SimpleDateFormat dftemp = new SimpleDateFormat("HH-mm-ss");
 		if(Level.equals(fail)){
-			File f = new File("/mnt/sdcard/LiZhiAutoScreenShot/") ;
-			if(!f.exists()){
-				f.mkdir();
-			}
-			f = new File("/mnt/sdcard/LiZhiAutoScreenShot/"+dftemp.format(new Date())+".png") ;
-		    test.uidevice.takeScreenshot(f);
+			TakeScreenShot(str);
 		}
 		
-		System.out.println(df.format(new Date())+":"+Level+"------"+str);
+		System.out.println(GetSystemTime()+":"+Level+"------"+str);
+	}
+	
+	
+	public static String GetSystemTime(){
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+		return df.format(new Date());
+	}
+	
+	public static void TakeScreenShot(String str){
+		SimpleDateFormat df = new SimpleDateFormat("MM-dd-HH-mm-ss");
+		File f = new File("/mnt/sdcard/LiZhiScreenShot/") ;
+		if(!f.exists()){
+			f.mkdir();
+		}
+		f = new File("/mnt/sdcard/LiZhiScreenShot/"+df.format(new Date())+str+".png") ;
+	    test.uidevice.takeScreenshot(f);
+		
 	}
 	
 	
@@ -188,6 +213,23 @@ public class Constant {
 			return null;
 		}
 	}
+	
+	
+	/**
+	 * 获取可滑动的Object
+	 * @return
+	 */
+	public static UiScrollable GetScrollableObject(String objectStr){
+		UiScrollable scrollableObject = new UiScrollable(new UiSelector().className(objectStr).scrollable(true));
+		if(scrollableObject.exists()){
+			return scrollableObject;
+		}else{
+			return null;
+		}
+	}
+	
+	
+	
 	
 	
 	
