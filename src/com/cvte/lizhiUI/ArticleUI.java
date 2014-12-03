@@ -50,7 +50,7 @@ public class ArticleUI extends UiAutomatorTestCase{
 	 * @return
 	 */
 	public static UiObject GetCommentDetail(UiObject object,int index) throws UiObjectNotFoundException{
-		UiObject commentDetail = object.getChild(new UiSelector().index(index));
+		UiObject commentDetail = object.getChild(new UiSelector().clickable(true).index(index));
 		if(commentDetail.exists()){
 			return commentDetail;
 		}else{
@@ -65,7 +65,7 @@ public class ArticleUI extends UiAutomatorTestCase{
 	 * @return
 	 */
 	public static UiObject GetPraiseOrCommentNum(UiObject object,int index) throws UiObjectNotFoundException{
-		UiObject praiseNum = object.getChild(new UiSelector().index(object.getChildCount()-2)).getChild(new UiSelector().index(index));
+		UiObject praiseNum = object.getChild(new UiSelector().clickable(true).className(Constant.TEXTVIEW).instance(index));
 		if(praiseNum.exists()){
 			return praiseNum;
 		}else{
@@ -174,7 +174,7 @@ public class ArticleUI extends UiAutomatorTestCase{
 			Constant.WriteLog(Constant.info, "该评论的评论内容为"+commentContentTv.getText());
 		}else{
 			commentContent = commentedNameTv.getText();
-			Constant.WriteLog(Constant.info, "该评论d的评论内容为"+commentedNameTv.getText());	
+			Constant.WriteLog(Constant.info, "该评论的评论内容为"+commentedNameTv.getText());	
 			
 		}
 		return commentContent;

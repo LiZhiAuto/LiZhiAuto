@@ -30,35 +30,15 @@ public class test extends UiAutomatorTestCase {
 		uidevice = getUiDevice();
 		width = uidevice.getDisplayWidth();
 		height = uidevice.getDisplayHeight();
-		System.out.println(width+""+height);
 
-		getUiDevice().pressHome();
-		UiObject allAppsButton = new UiObject(new UiSelector().description("应用"));
-		allAppsButton.clickAndWaitForNewWindow();
-
-		// 然后在 Apps tab界面，模拟用户滑动到时钟应用的操作。
-		// 由于Apps界面是可以滚动的，所有用
-		// UiScrollable 对象.
-		UiObject settingsApp = null;
-		UiScrollable appViews = new UiScrollable(new UiSelector().scrollable(true));
-		if(appViews.exists()){
-			appViews.setAsHorizontalList();
-			settingsApp = appViews.getChildByText(
-					new UiSelector().className(android.widget.TextView.class.getName()), Constant.application);
-		}else{
-			settingsApp = Constant.GetTextObject(Constant.application);
-		}
-		settingsApp.clickAndWaitForNewWindow();
+		Constant.OpenLiZHi();
 		sleep(5000);
 		IsExistUpdate();
 		
+		Constant.WriteLog(Constant.info,"-----------文章全部列表UI验证-----------");
+		article.ArticleUICheck();
 		
-		
-		Constant.WriteLog(Constant.info,"-----------文章评论功能验证-----------");
-		article.ArticleComment(INDEX);
 	
-		article.ArticleCommentUICheck(INDEX);
-		
 		
 		Constant.WriteLog(Constant.info,"-----------文章专题UI验证-----------");
 		article.TopicCheckAndTraversal();
@@ -78,6 +58,8 @@ public class test extends UiAutomatorTestCase {
 		article.SearchArticleUICheck();
 		Constant.WriteLog(Constant.info,"-----------文章搜索功能验证-----------");
 		article.SearchArticle();
+		Constant.WriteLog(Constant.info,"-----------文章评论UI验证-----------");
+		article.ArticleCommentUICheck(INDEX);
 		Constant.WriteLog(Constant.info,"-----------文章评论功能验证-----------");
 		article.ArticleComment(INDEX);
 		Constant.WriteLog(Constant.info,"-----------文章评论点赞功能验证-----------");

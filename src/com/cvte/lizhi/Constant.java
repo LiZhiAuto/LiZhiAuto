@@ -228,6 +228,29 @@ public class Constant {
 		}
 	}
 	
+	/**
+	 * 打开立知应用
+	 * @param 
+	 * @return
+	 */
+	public static void OpenLiZHi() throws UiObjectNotFoundException{
+		test.uidevice.pressHome();
+		UiObject allAppsButton = new UiObject(new UiSelector().description("应用"));
+		if(allAppsButton.exists()){
+			allAppsButton.clickAndWaitForNewWindow();
+		}
+		UiObject liZhiApp = null;
+		UiScrollable appViews = new UiScrollable(new UiSelector().scrollable(true));
+		if(appViews.exists()){
+			appViews.setAsHorizontalList();
+			liZhiApp = appViews.getChildByText(
+					new UiSelector().className(android.widget.TextView.class.getName()), Constant.application);
+		}else{
+			liZhiApp = Constant.GetTextObject(Constant.application);
+		}
+		liZhiApp.clickAndWaitForNewWindow();
+	}
+	
 	
 	
 	

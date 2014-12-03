@@ -2,6 +2,9 @@
 package com.cvte.lizhi;
 
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.os.RemoteException;
 import com.android.uiautomator.core.UiObject;
 import com.android.uiautomator.core.UiObjectNotFoundException;
@@ -64,6 +67,9 @@ public class Article extends UiAutomatorTestCase {
 	 * @throws UiObjectNotFoundException
 	 */
 	public void TopicCheckAndTraversal() throws UiObjectNotFoundException{
+		
+		String lastDate = "今日";
+		boolean flag = true;
 		UiScrollable topicObject = Constant.GetScrollableObject(Constant.VIEWPAGER);
 		if(topicObject!=null){
 			topicObject.setAsHorizontalList();
@@ -91,6 +97,17 @@ public class Article extends UiAutomatorTestCase {
 				//列表中的日期
 				UiObject date = ArticleUI.GetListViewContent(i, CHANNEL);
 				Constant.WriteLog(Constant.info, "第"+i+"条的时间为      "+date.getText());
+				
+				if(!CompareTime(lastDate, date.getText())){
+					Constant.WriteLog(Constant.fail, "专题"+topicTitle.getText()+"中文章列表时间排列不正确");
+					flag = false;
+				}
+				lastDate = date.getText();
+				
+			}
+			
+			if(flag){
+				Constant.WriteLog(Constant.fail, "专题"+topicTitle.getText()+"中文章列表时间排列正确");
 			}
 
 		}else{
@@ -139,6 +156,8 @@ public class Article extends UiAutomatorTestCase {
 	 */
 	public void ArticleUICheck() throws UiObjectNotFoundException{
 
+		String lastDate = "今日";
+		boolean flag = true;
 		//这里先判断专题是否在全部处
 		UiObject article = Constant.GetTextObject(Constant.article); 
 		if(article!=null){
@@ -161,18 +180,56 @@ public class Article extends UiAutomatorTestCase {
 					//列表中的日期
 					UiObject date = ArticleUI.GetListViewContent(i, DATE);
 					Constant.WriteLog(Constant.info, "第"+i+"条的时间为      "+date.getText());
+					
+					if(!CompareTime(lastDate, date.getText())){
+						Constant.WriteLog(Constant.fail,"专题“全部”中文章列表时间排列不正确");
+						flag = false;
+					}
+					lastDate = date.getText();
 				}
-
+				if(flag){
+					Constant.WriteLog(Constant.fail, "专题“全部”中文章列表时间排列正确");
+				}
 			}
-
-
+		}else{
+			Constant.WriteLog(Constant.fail, "未找到文章按钮");
 		}
-
-
-
-
-
 	}
+	
+	public boolean CompareTime(String lastDate,String nextDate){
+		
+		
+		String lastDateArray[] = FormatDate(lastDate);
+		String nextDateArray[] = FormatDate(nextDate);
+		if(lastDateArray.length<nextDateArray.length){
+			return true;
+		}else{
+			if(Integer.valueOf(lastDateArray[0]).intValue()>Integer.valueOf(nextDateArray[0]).intValue()){
+				return true;
+			}else if(Integer.valueOf(lastDateArray[0]).intValue()==Integer.valueOf(nextDateArray[0]).intValue()){
+				if(Integer.valueOf(lastDateArray[0]).intValue()>=Integer.valueOf(nextDateArray[0]).intValue()){
+					return true;
+				}else{
+					return false;
+				}
+			}else{
+				return false;
+			}
+	
+		}
+	}
+	
+	
+	public String[] FormatDate(String date){
+		
+		if(date.equals("今日")){
+			SimpleDateFormat df = new SimpleDateFormat("MM/dd");//设置日期格式
+			date = df.format(new Date());
+		}
+		String array[] = date.split("/");
+		return array;
+	}
+	
 
 
 	/**
@@ -636,18 +693,18 @@ public class Article extends UiAutomatorTestCase {
 			Constant.WriteLog(Constant.info, "空评论发表失败");
 		}
 
-//		Constant.WriteLog(Constant.info, "填写内容超过140个字符");
+		Constant.WriteLog(Constant.info, "填写内容超过140个字符");
 		UiObject commentEditText = Constant.GetObject(Constant.EDITTEXT, 0);
-//		commentEditText.setText(Constant.longString);
-//		if(!publicTextView.isClickable()){
-//			Constant.WriteLog(Constant.info, "填写内容超过140个字符时，发表按钮变灰");
-//		}else{
-//			Constant.WriteLog(Constant.info, "填写内容超过140个字符时，发表按钮未变成灰色");
-//		}
-//		Constant.WriteLog(Constant.info, "填写内容当前的系统时间");
-//		commentEditText.clearTextField();
-//		commentEditText.clearTextField();
-//		commentEditText.clearTextField();
+		commentEditText.setText(Constant.longString);
+		if(!publicTextView.isClickable()){
+			Constant.WriteLog(Constant.info, "填写内容超过140个字符时，发表按钮变灰");
+		}else{
+			Constant.WriteLog(Constant.info, "填写内容超过140个字符时，发表按钮未变成灰色");
+		}
+		Constant.WriteLog(Constant.info, "填写内容当前的系统时间");
+		commentEditText.clearTextField();
+		commentEditText.clearTextField();
+		commentEditText.clearTextField();
 		String nowTime = Constant.GetSystemTime();
 		commentEditText.setText(nowTime);
 
@@ -709,9 +766,9 @@ public class Article extends UiAutomatorTestCase {
 					if(cancel!=null){
 						cancel.click();
 						if(commentContent.equals(ArticleUI.GetCommentContent(1))){
-							Constant.WriteLog(Constant.fail, "取消删除评论成功");
+							Constant.WriteLog(Constant.info, "取消删除评论成功");
 						}else{
-							Constant.WriteLog(Constant.info, "取消删除评论失败");
+							Constant.WriteLog(Constant.fail, "取消删除评论失败");
 						}
 					}
 				}else{
