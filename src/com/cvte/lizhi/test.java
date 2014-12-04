@@ -31,15 +31,16 @@ public class test extends UiAutomatorTestCase {
 		width = uidevice.getDisplayWidth();
 		height = uidevice.getDisplayHeight();
 
-		Constant.OpenLiZHi();
+		Constant.OpenApplication(Constant.lizhi);
 		sleep(5000);
 		IsExistUpdate();
+
 		
-		Constant.WriteLog(Constant.info,"-----------文章全部列表UI验证-----------");
-		article.ArticleUICheck();
+		
+		Constant.WriteLog(Constant.info,"-----------文章评论复制功能-----------");
+		article.ArticleCommentCopy(INDEX);
 		
 	
-		
 		Constant.WriteLog(Constant.info,"-----------文章专题UI验证-----------");
 		article.TopicCheckAndTraversal();
 		Constant.WriteLog(Constant.info,"-----------文章全部列表UI验证-----------");
@@ -60,10 +61,14 @@ public class test extends UiAutomatorTestCase {
 		article.SearchArticle();
 		Constant.WriteLog(Constant.info,"-----------文章评论UI验证-----------");
 		article.ArticleCommentUICheck(INDEX);
-		Constant.WriteLog(Constant.info,"-----------文章评论功能验证-----------");
-		article.ArticleComment(INDEX);
+		Constant.WriteLog(Constant.info,"-----------文章评论复制功能-----------");
+		article.ArticleCommentCopy(INDEX);
+		Constant.WriteLog(Constant.info,"-----------文章评论举报功能-----------");
+		article.ArticleCommentReport(INDEX);
 		Constant.WriteLog(Constant.info,"-----------文章评论点赞功能验证-----------");
 		article.ArticleCommentPraise(INDEX);
+		Constant.WriteLog(Constant.info,"-----------文章评论功能验证-----------");
+		article.ArticleComment(INDEX);
 		Constant.WriteLog(Constant.info,"-----------评论文章的评论功能验证-----------");
 		article.ArticleCommentOtherComment(INDEX);
 		Constant.WriteLog(Constant.info,"-----------我的页面界面验证-----------");
@@ -103,24 +108,25 @@ public class test extends UiAutomatorTestCase {
 
 		try {
 
-			UiObject my = new UiObject(new UiSelector().text(Constant.my)); 
+			
+			UiObject my = Constant.GetTextObject(Constant.my); 
 
 			my.click();
 
-			UiObject mailLogin = new UiObject(new UiSelector().text(Constant.mailLogin));
+			UiObject mailLogin =Constant.GetTextObject(Constant.mailLogin);
 
 			mailLogin.clickAndWaitForNewWindow();
 
-			UiObject mailEdit = new UiObject(new UiSelector().text("邮箱"));
+			UiObject mailEdit = Constant.GetTextObject(Constant.mail);
 
-			mailEdit.setText("411249087@qq.com");
+			mailEdit.setText(Constant.userName);
 
-			UiObject passwordEdit  = new UiObject(new UiSelector().className("android.widget.EditText").focused(false));
+			UiObject passwordEdit  = Constant.GetObject(Constant.EDITTEXT, 1);
 
-			passwordEdit.setText("123456");
+			passwordEdit.setText(Constant.password);
 
 
-			UiObject login = new UiObject(new UiSelector().text("登录"));
+			UiObject login = Constant.GetTextObject(Constant.login);
 
 			login.clickAndWaitForNewWindow();
 

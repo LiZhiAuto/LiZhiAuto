@@ -49,8 +49,9 @@ public class ArticleUI extends UiAutomatorTestCase{
 	 * @param 
 	 * @return
 	 */
-	public static UiObject GetCommentDetail(UiObject object,int index) throws UiObjectNotFoundException{
-		UiObject commentDetail = object.getChild(new UiSelector().clickable(true).index(index));
+	public static UiObject GetCommentDetail(int index) throws UiObjectNotFoundException{
+		UiObject listView = Constant.GetObject(Constant.LISTVIEW, 0);
+		UiObject commentDetail = listView.getChild(new UiSelector().clickable(true).index(index));
 		if(commentDetail.exists()){
 			return commentDetail;
 		}else{
@@ -165,24 +166,75 @@ public class ArticleUI extends UiAutomatorTestCase{
 		}
 	}
 	
-	public static String GetCommentContent(int index) throws UiObjectNotFoundException{
-		UiObject commentedNameTv = ArticleUI.GetListViewContent(index, 3);
-		String commentContent ;
-		if(commentedNameTv.getText().startsWith("@")){
-			UiObject commentContentTv = ArticleUI.GetListViewContent(index, 5);
-			commentContent = commentContentTv.getText();
-			Constant.WriteLog(Constant.info, "该评论的评论内容为"+commentContentTv.getText());
-		}else{
-			commentContent = commentedNameTv.getText();
-			Constant.WriteLog(Constant.info, "该评论的评论内容为"+commentedNameTv.getText());	
-			
+//	public static String GetCommentContent(int index) throws UiObjectNotFoundException{
+//		UiObject commentedNameTv = ArticleUI.GetListViewContent(index, 3);
+//		String commentContent ;
+//		if(commentedNameTv.getText().startsWith("@")){
+//			UiObject commentContentTv = ArticleUI.GetListViewContent(index, 5);
+//			commentContent = commentContentTv.getText();
+//			Constant.WriteLog(Constant.info, "获取评论内容为"+commentContentTv.getText());
+//		}else{
+//			commentContent = commentedNameTv.getText();
+//			Constant.WriteLog(Constant.info, "获取评论内容为"+commentedNameTv.getText());	
+//			
+//		}
+//		return commentContent;
+//	}
+	
+	
+
+	/**
+	 * 获取评论内容    
+	 * @param index   
+	 * @param type    
+	COMMNETUSERNAME = 0; 评论人
+	COMMENTUSERSCHOOL = 1; 评论人学校
+	COMMENTIME = 2;   评论时间
+	COMMENTEDUSERNAME = 3; 被评论人
+	COMMENTEDCONTENT = 4;被评论的内容
+	COMMENTCONTENT = 5;评论内容
+	COMMENTPRAISE = 6;评论的点赞数
+	 * @return
+	 * @throws UiObjectNotFoundException
+	 */
+	public static String GetCommentContent(int index,int type) throws UiObjectNotFoundException{
+		UiObject object = null;
+		if(type<=2){
+			object = ArticleUI.GetListViewContent(index, type);
+			return object.getText();
 		}
-		return commentContent;
+		if(IsQuoteComment(index)){
+			if(type==Constant.COMMENTEDUSERNAME){
+				UiObject commentedNameTv = ArticleUI.GetListViewContent(index, type);
+				return  commentedNameTv.getText().substring(1,commentedNameTv.getText().length()-1);
+			}else{
+				object = ArticleUI.GetListViewContent(index, type);
+				return object.getText();
+			}
+		}else{
+			object = ArticleUI.GetListViewContent(index, type-2);
+			return object.getText();
+		}
 	}
 	
 	
+	/**
+	 * 是否为引用评论
+	 * @param index
+	 * @return
+	 * @throws UiObjectNotFoundException
+	 */
+	public static Boolean IsQuoteComment(int index) throws UiObjectNotFoundException{
+		UiObject commentedNameTv = ArticleUI.GetListViewContent(index, 3);
+		if(commentedNameTv.getText().startsWith("@")){
+			return true;
+		}else{
+			return false;
+		}
+	}
 
-
+	
+	
 	
 
 	

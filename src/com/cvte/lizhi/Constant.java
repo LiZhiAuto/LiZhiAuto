@@ -86,6 +86,8 @@ public class Constant {
 	public static String point = "积分";
 	
 	public static String share = "分享";
+	
+	public static String weiXin = "微信";
 
 	public static String createNewTalk = "创建新聊天";
 	
@@ -95,10 +97,34 @@ public class Constant {
 	
 	public static String back = "返回";
 	
-	public static String application = "立知";
+	public static String send = "发送";
+			
+	public static String lizhi = "立知";
 	
 	public static String delete = "删除";
-
+	
+	public static String copy = "复制";
+	
+	public static String paste = "粘贴";
+	
+	public static String report = "举报";
+	
+	public static int  COMMNETUSERNAME = 0;
+	
+	public static int COMMENTUSERSCHOOL = 1;
+	
+	public static int COMMENTIME = 2;
+	
+	public static int COMMENTEDUSERNAME = 3;
+	
+	public static int COMMENTEDCONTENT = 4;
+	
+	public static int COMMENTCONTENT = 5;
+	
+	public static int COMMENTPRAISE = 6;
+	
+	public static int NUM = 1;
+	
 	public static String IMAGEVIEW = "android.widget.ImageView";
 	
 	public static String IMAGEBUTTON = "android.widget.ImageButton";
@@ -112,6 +138,8 @@ public class Constant {
 	public static String GRIDVIEW = "android.widget.GridView";
 	
 	public static String BUTTON = "android.widget.Button";
+	
+	public static String VIEW = "android.view.View";
 	
 	public static String RADIOBUTTON = "android.widget.RadioButton";
 	
@@ -228,12 +256,27 @@ public class Constant {
 		}
 	}
 	
+	
+	/**
+	 * 返回一个描述内容为objectStr
+	 * @param objectStr
+	 * @return
+	 */
+	public static UiObject GetDescObject(String objectStr){
+		UiObject object = new UiObject(new UiSelector().description(objectStr));
+		if(object.exists()){
+			return object;
+		}else{
+			return null;
+		}
+	}
+	
 	/**
 	 * 打开立知应用
 	 * @param 
 	 * @return
 	 */
-	public static void OpenLiZHi() throws UiObjectNotFoundException{
+	public static void OpenApplication(String application) throws UiObjectNotFoundException{
 		test.uidevice.pressHome();
 		UiObject allAppsButton = new UiObject(new UiSelector().description("应用"));
 		if(allAppsButton.exists()){
@@ -244,9 +287,9 @@ public class Constant {
 		if(appViews.exists()){
 			appViews.setAsHorizontalList();
 			liZhiApp = appViews.getChildByText(
-					new UiSelector().className(android.widget.TextView.class.getName()), Constant.application);
+					new UiSelector().className(android.widget.TextView.class.getName()), application);
 		}else{
-			liZhiApp = Constant.GetTextObject(Constant.application);
+			liZhiApp = Constant.GetTextObject(application);
 		}
 		liZhiApp.clickAndWaitForNewWindow();
 	}
