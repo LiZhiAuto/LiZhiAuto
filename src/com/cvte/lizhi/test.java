@@ -36,9 +36,9 @@ public class test extends UiAutomatorTestCase {
 		IsExistUpdate();
 
 		
-		
-		Constant.WriteLog(Constant.info,"-----------文章评论复制功能-----------");
-		article.ArticleCommentCopy(INDEX);
+
+		Constant.WriteLog(Constant.info,"-----------积分规则验证-----------");
+		my.PointRule(INDEX);
 		
 	
 		Constant.WriteLog(Constant.info,"-----------文章专题UI验证-----------");
@@ -79,8 +79,9 @@ public class test extends UiAutomatorTestCase {
 		my.ModifyNickName();
 		my.ModifySex();
 		my.ModifySchool();
-		my.modifyCity();
-		my.modifyProfession();
+		my.ModifyCity();
+		my.ModifyProfession();
+		my.CheckModifyInfoSuccess(INDEX, my.user);
 		
 	}
 

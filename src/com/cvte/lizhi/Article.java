@@ -56,6 +56,20 @@ public class Article extends UiAutomatorTestCase {
 		}
 
 	}
+	
+	
+	/**
+	 * 进入文章页面
+	 * @throws UiObjectNotFoundException
+	 */
+	public void EnterArticlePage() throws UiObjectNotFoundException{
+		UiObject article = Constant.GetTextObject(Constant.article);
+		if(article!=null){
+			article.clickAndWaitForNewWindow();
+		}else{
+			Constant.WriteLog(Constant.fail, "未找到文章按钮");
+		}
+	}
 
 
 	/**
@@ -69,12 +83,61 @@ public class Article extends UiAutomatorTestCase {
 		}
 	}
 
+
+	/**
+	 * 文章列表item的点击
+	 * @param index
+	 */
+	public String  ArticalItem(int index){
+		try {
+			UiObject article = Constant.GetTextObject(Constant.article);
+			article.clickAndWaitForNewWindow();
+			UiObject textView = ArticleUI.GetListViewContent(index,TITLE);
+			if(textView!=null){
+				String title = textView.getText();
+				Constant.WriteLog(Constant.info, "所点击的文章标题为"+textView.getText());
+				textView.clickAndWaitForNewWindow();
+				sleep(5000);
+				return title;
+			}else{
+				Constant.WriteLog(Constant.fail,"未找到文章标题");
+			}
+		} catch (UiObjectNotFoundException e) {
+
+			e.printStackTrace();
+
+		}
+
+		return "";
+	}
+
+	/**
+	 * 进入文章评论页面
+	 * @throws UiObjectNotFoundException
+	 */
+	public void EnterArticleCommentPage() throws UiObjectNotFoundException{
+		//找到评论按钮
+		UiObject comment= Constant.GetObject(Constant.IMAGEBUTTON, 1);
+		UiObject commentNumTv = Constant.GetObject(Constant.TEXTVIEW, 1);
+		if(commentNumTv!=null){
+			Constant.WriteLog(Constant.info, "文章的评论数为"+commentNumTv.getText());
+		}
+		if(comment!=null){
+			comment.clickAndWaitForNewWindow();
+		}else{
+			Constant.WriteLog(Constant.fail, "未找到评论按钮");
+		}
+		
+	}
+
+
+
 	/**
 	 * 专题检查
 	 * @throws UiObjectNotFoundException
 	 */
 	public void TopicCheckAndTraversal() throws UiObjectNotFoundException{
-		
+
 		String lastDate = "今日";
 		boolean flag = true;
 		UiScrollable topicObject = Constant.GetScrollableObject(Constant.VIEWPAGER);
@@ -104,15 +167,15 @@ public class Article extends UiAutomatorTestCase {
 				//列表中的日期
 				UiObject date = ArticleUI.GetListViewContent(i, CHANNEL);
 				Constant.WriteLog(Constant.info, "第"+i+"条的时间为      "+date.getText());
-				
+
 				if(!CompareTime(lastDate, date.getText())){
 					Constant.WriteLog(Constant.fail, "专题"+topicTitle.getText()+"中文章列表时间排列不正确");
 					flag = false;
 				}
 				lastDate = date.getText();
-				
+
 			}
-			
+
 			if(flag){
 				Constant.WriteLog(Constant.fail, "专题"+topicTitle.getText()+"中文章列表时间排列正确");
 			}
@@ -123,37 +186,6 @@ public class Article extends UiAutomatorTestCase {
 		}
 
 	}
-
-
-
-
-	/**
-	 * 文章列表item的点击
-	 * @param index
-	 */
-	public String  ArticalItem(int index){
-		try {
-			UiObject article = Constant.GetTextObject(Constant.article);
-			article.clickAndWaitForNewWindow();
-			UiObject textView = ArticleUI.GetListViewContent(index,TITLE);
-			if(textView!=null){
-				String title = textView.getText();
-				Constant.WriteLog(Constant.info, "所点击的文章标题为"+textView.getText());
-				textView.clickAndWaitForNewWindow();
-				sleep(2000);
-				return title;
-			}else{
-				Constant.WriteLog(Constant.fail,"未找到文章标题");
-			}
-		} catch (UiObjectNotFoundException e) {
-
-			e.printStackTrace();
-
-		}
-
-		return "";
-	}
-
 
 
 	/**
@@ -187,7 +219,7 @@ public class Article extends UiAutomatorTestCase {
 					//列表中的日期
 					UiObject date = ArticleUI.GetListViewContent(i, DATE);
 					Constant.WriteLog(Constant.info, "第"+i+"条的时间为      "+date.getText());
-					
+
 					if(!CompareTime(lastDate, date.getText())){
 						Constant.WriteLog(Constant.fail,"专题“全部”中文章列表时间排列不正确");
 						flag = false;
@@ -202,7 +234,7 @@ public class Article extends UiAutomatorTestCase {
 			Constant.WriteLog(Constant.fail, "未找到文章按钮");
 		}
 	}
-	
+
 	/**
 	 * 比较两个时间
 	 * @param lastDate  10/11
@@ -210,8 +242,8 @@ public class Article extends UiAutomatorTestCase {
 	 * @return
 	 */
 	public boolean CompareTime(String lastDate,String nextDate){
-		
-		
+
+
 		String lastDateArray[] = FormatDate(lastDate);
 		String nextDateArray[] = FormatDate(nextDate);
 		if(lastDateArray.length<nextDateArray.length){
@@ -228,17 +260,17 @@ public class Article extends UiAutomatorTestCase {
 			}else{
 				return false;
 			}
-	
+
 		}
 	}
-	
+
 	/**
 	 * 时间的格式化
 	 * @param date
 	 * @return
 	 */
 	public String[] FormatDate(String date){
-		
+
 		if(date.equals("今日")){
 			SimpleDateFormat df = new SimpleDateFormat("MM/dd");//设置日期格式
 			date = df.format(new Date());
@@ -246,7 +278,7 @@ public class Article extends UiAutomatorTestCase {
 		String array[] = date.split("/");
 		return array;
 	}
-	
+
 
 
 	/**
@@ -598,6 +630,9 @@ public class Article extends UiAutomatorTestCase {
 
 	}
 
+	
+	
+	
 
 
 	/**
@@ -638,7 +673,7 @@ public class Article extends UiAutomatorTestCase {
 						Constant.WriteLog(Constant.fail, "点赞操作失败");
 					}
 				}
-				if(i==1){
+				if(i==1){   
 					//找到返回按钮
 					UiObject back = Constant.GetObject(Constant.IMAGEVIEW, 0);
 					if(back!=null){
@@ -686,39 +721,77 @@ public class Article extends UiAutomatorTestCase {
 
 	public void  ArticleComment(int index) throws UiObjectNotFoundException{
 		ArticalItem(index);
-
-		//找到评论按钮
-		UiObject comment= Constant.GetObject(Constant.IMAGEBUTTON, 1);
-		UiObject commentNumTv = Constant.GetObject(Constant.TEXTVIEW, 1);
-		if(commentNumTv!=null){
-			Constant.WriteLog(Constant.info, "文章的评论数为"+commentNumTv.getText());
-		}
-		comment.clickAndWaitForNewWindow();
+		EnterArticleCommentPage();
 		//点击评论按钮
 		UiObject commentTextView = Constant.GetTextObject(Constant.comment);
 		commentTextView.clickAndWaitForNewWindow();
 
+		if(EmptyComment()){
+			if(LongComment()){
+				if(CorrectComment()){
+					DeleteComment(1);
+				}
+			}
+		}
+		//返回至主界面
+		UiObject back = Constant.GetObject(Constant.IMAGEVIEW, 0);
+		if(back!=null){
+			back.click();
+			back.click();
+		}
+	}
+
+
+	/**
+	 * 发表空评论是否成功
+	 * @param commentTextView
+	 * @return
+	 * @throws UiObjectNotFoundException
+	 */
+	public Boolean EmptyComment() throws UiObjectNotFoundException{
 		Constant.WriteLog(Constant.info, "不填写内容,发表空的评论");
 		//点击发表按钮
 		UiObject publicTextView = Constant.GetTextObject(Constant.pubic);
 		publicTextView.click();
-
-		if(commentTextView.exists()){
+		UiObject commentTextView = Constant.GetTextObject(Constant.pubic);
+		if(commentTextView!=null){
 			Constant.WriteLog(Constant.fail, "空评论发表成功");
-			return ;
+			return true;
 		}else{
 			Constant.WriteLog(Constant.info, "空评论发表失败");
+			return false;
 		}
+	}
+
+
+	/**
+	 * 超过140个字符的评论
+	 * @return
+	 * @throws UiObjectNotFoundException
+	 */
+	public Boolean LongComment( ) throws UiObjectNotFoundException{
 
 		Constant.WriteLog(Constant.info, "填写内容超过140个字符");
 		UiObject commentEditText = Constant.GetObject(Constant.EDITTEXT, 0);
 		commentEditText.setText(Constant.longString);
+		UiObject publicTextView = Constant.GetTextObject(Constant.pubic);
 		if(!publicTextView.isClickable()){
 			Constant.WriteLog(Constant.info, "填写内容超过140个字符时，发表按钮变灰");
+			return true;
 		}else{
 			Constant.WriteLog(Constant.info, "填写内容超过140个字符时，发表按钮未变成灰色");
+			return false;
 		}
+
+	}
+
+	/**
+	 * 合理的评论
+	 * @throws UiObjectNotFoundException
+	 */
+	public Boolean CorrectComment() throws UiObjectNotFoundException{
 		Constant.WriteLog(Constant.info, "填写内容当前的系统时间");
+		UiObject commentEditText = Constant.GetObject(Constant.EDITTEXT, 0);
 		commentEditText.clearTextField();
 		commentEditText.clearTextField();
 		commentEditText.clearTextField();
@@ -733,12 +806,13 @@ public class Article extends UiAutomatorTestCase {
 			Constant.WriteLog(Constant.info, "符合字数变化规则");
 		}else{
 			Constant.WriteLog(Constant.fail, "不符合字数变化规则");
-			return ;
+
 		}
 		//点击发表
+		UiObject publicTextView = Constant.GetTextObject(Constant.pubic);
 		publicTextView.clickAndWaitForNewWindow();
 		sleep(2000);
-		UiObject commentDetail = ArticleUI.GetCommentDetail(1);
+		//UiObject commentDetail = ArticleUI.GetCommentDetail(1);
 		String content = ArticleUI.GetCommentContent(Constant.NUM, Constant.COMMENTCONTENT);		
 		Constant.WriteLog(Constant.info, "列表第一条评论为"+content); 
 		if(content.equals(nowTime)){
@@ -747,32 +821,37 @@ public class Article extends UiAutomatorTestCase {
 			content = ArticleUI.GetCommentContent(Constant.NUM, Constant.COMMENTCONTENT);
 			if(content.equals(nowTime)){
 				Constant.WriteLog(Constant.info, "评论列表刷新前后一致"); 
+				return true;
+				//DeleteComment(commentDetail);
 			}else{
 				Constant.WriteLog(Constant.fail, "评论列表刷新前后不一致"); 
+				return false;
 			}
-			DeleteComment(commentDetail);
+
 		}else{
 			Constant.WriteLog(Constant.fail, "与发表的评论内容不相同，评论发表失败");
-		}
-
-		//返回至主界面
-		UiObject back = Constant.GetObject(Constant.IMAGEVIEW, 0);
-		if(back!=null){
-			back.click();
-			back.click();
+			return false;
 		}
 	}
 
-	
 	/**
-	 * 删除评论
+	 * 
+	 */
+
+
+	/**
+	 * 删除评论  (删除评论方法默认是处于评论列表界面)
 	 * @param object
 	 * @throws UiObjectNotFoundException
 	 */
-	public void DeleteComment(UiObject object) throws UiObjectNotFoundException{
+	public void DeleteComment(int index) throws UiObjectNotFoundException{
+		
+		
+		
+		UiObject commentUser = ArticleUI.GetListViewContent(index, 0);
 		String commentContent = ArticleUI.GetCommentContent(Constant.NUM, Constant.COMMENTCONTENT);
 		for(int i=0;i<2;i++){
-			object.longClick();
+			commentUser.longClick();
 			UiObject delete = Constant.GetTextObject(Constant.delete);
 			if(delete!=null){
 				delete.click();
@@ -790,20 +869,25 @@ public class Article extends UiAutomatorTestCase {
 					UiObject confirm = Constant.GetTextObject(Constant.confirm);
 					if(confirm!=null){
 						confirm.click();
-						if(commentContent.equals(ArticleUI.GetCommentContent(Constant.NUM, Constant.COMMENTCONTENT))){
-							Constant.WriteLog(Constant.fail, "删除评论失败");
-						}else{
-							Constant.WriteLog(Constant.info, "删除评论成功");
+						UiObject listView = Constant.GetObject(Constant.LISTVIEW, 0);
+							if(listView==null){
+								Constant.WriteLog(Constant.info, "删除评论成功");
+							}else{
+								if(commentContent.equals(ArticleUI.GetCommentContent(Constant.NUM, Constant.COMMENTCONTENT))){
+									Constant.WriteLog(Constant.fail, "删除评论失败");
+								}else{
+									Constant.WriteLog(Constant.info, "删除评论成功");
+								}
+							}
 						}
+						
 					}
-				}
-				
-			}else{
+				}else{
 				Constant.WriteLog(Constant.fail, "未找到删除按钮");
 			}
 		}
-		
-		
+
+
 	}
 
 
@@ -838,8 +922,8 @@ public class Article extends UiAutomatorTestCase {
 		Back();
 	}
 
-	
-	
+
+
 	/**
 	 * 文章评论的复制功能
 	 * @param index
@@ -875,18 +959,17 @@ public class Article extends UiAutomatorTestCase {
 					}else{
 						Constant.WriteLog(Constant.fail, "未找到粘贴按钮");
 					}
-					
 				}
 			}
-			
+
 			Back();
-			
+
 		}else{
 			Constant.WriteLog(Constant.fail, "未找到评论按钮");
 		}
 		Back();
 	}
-	
+
 	/**
 	 * 文章举报功能
 	 * @param index
@@ -910,13 +993,13 @@ public class Article extends UiAutomatorTestCase {
 				}
 			}
 			Back();
-			
+
 		}else{
 			Constant.WriteLog(Constant.fail, "未找到评论按钮");
 		}
 		Back();
 	}
-	
+
 	/**
 	 * 文章评论点赞取消点赞
 	 * @param 
@@ -1068,30 +1151,30 @@ public class Article extends UiAutomatorTestCase {
 	public boolean IsCommentOtherCommentSuccess(String commentedName,String commentedContent,String Mehod) throws UiObjectNotFoundException{
 		//比较第一条内容中评论内容是否为刚回复的内容
 		String commentContent = ArticleUI.GetCommentContent(Constant.NUM, Constant.COMMENTCONTENT);
-	
-			if(nowTime.equals(commentContent)){
-				Constant.WriteLog(Constant.info, Mehod+"评论后，评论内容与输入时一致");
-				String newCommentedName = ArticleUI.GetCommentContent(Constant.NUM, Constant.COMMENTEDUSERNAME);
-				if(commentedName.equals(newCommentedName)){
-					String newCommentedContent = ArticleUI.GetCommentContent(Constant.NUM, Constant.COMMENTEDCONTENT);
-					if(newCommentedContent.equals(commentedContent)){
-						Constant.WriteLog(Constant.info, Mehod+"评论后，引用评论内容正确");
-						return true;
-					}else{
-						Constant.WriteLog(Constant.info, newCommentedContent+"        "+commentedContent);
-						Constant.WriteLog(Constant.fail, Mehod+"评论后，引用评论内容不正确");
-						return false;
-					}
+
+		if(nowTime.equals(commentContent)){
+			Constant.WriteLog(Constant.info, Mehod+"评论后，评论内容与输入时一致");
+			String newCommentedName = ArticleUI.GetCommentContent(Constant.NUM, Constant.COMMENTEDUSERNAME);
+			if(commentedName.equals(newCommentedName)){
+				String newCommentedContent = ArticleUI.GetCommentContent(Constant.NUM, Constant.COMMENTEDCONTENT);
+				if(newCommentedContent.equals(commentedContent)){
+					Constant.WriteLog(Constant.info, Mehod+"评论后，引用评论内容正确");
+					return true;
 				}else{
-					Constant.WriteLog(Constant.info, newCommentedName+"        "+commentedName);
-					Constant.WriteLog(Constant.fail, Mehod+"评论后，引用评论名字不正确");
+					Constant.WriteLog(Constant.info, newCommentedContent+"        "+commentedContent);
+					Constant.WriteLog(Constant.fail, Mehod+"评论后，引用评论内容不正确");
 					return false;
 				}
 			}else{
-				Constant.WriteLog(Constant.fail, Mehod+"评论后，评论内容与输入时不一致");
+				Constant.WriteLog(Constant.info, newCommentedName+"        "+commentedName);
+				Constant.WriteLog(Constant.fail, Mehod+"评论后，引用评论名字不正确");
 				return false;
 			}
-		
+		}else{
+			Constant.WriteLog(Constant.fail, Mehod+"评论后，评论内容与输入时不一致");
+			return false;
+		}
+
 
 
 	}
@@ -1267,7 +1350,7 @@ public class Article extends UiAutomatorTestCase {
 	/**
 	 * 反向内容
 	 * @param type  cicrle = 2朋友圈     Weixin = 1 微信  
- 	 * @return
+	 * @return
 	 * @throws UiObjectNotFoundException
 	 */
 	public boolean  ShareContent(int type) throws UiObjectNotFoundException{
@@ -1283,7 +1366,7 @@ public class Article extends UiAutomatorTestCase {
 			sleep(2000);
 			switch (type) {
 			case 0:
-				
+
 				break;
 			case 1:
 				UiObject send = Constant.GetContainTextObject(Constant.send);
@@ -1301,8 +1384,8 @@ public class Article extends UiAutomatorTestCase {
 						}
 					}
 				}
-				
-				
+
+
 				break;
 			case 2:
 				Constant.OpenApplication(Constant.weiXin);
@@ -1313,12 +1396,12 @@ public class Article extends UiAutomatorTestCase {
 					return false;
 				}
 			}
-			
+
 			return true;
 		}else{
 			switch (type) {
 			case 0:
-				
+
 				break;
 			case 1:
 				Constant.WriteLog(Constant.fail,"微信未安装，请安装微信");
@@ -1327,7 +1410,7 @@ public class Article extends UiAutomatorTestCase {
 				Constant.WriteLog(Constant.fail,"微信未安装，请安装微信");
 				return false;
 			}
-			
+
 			return false;
 		}
 	}
