@@ -14,7 +14,7 @@ import com.android.uiautomator.testrunner.UiAutomatorTestCase;
 public class test extends UiAutomatorTestCase {   
 
 
-	public static int INDEX =2;
+	public static int INDEX =4;
 
 	public static UiDevice  uidevice ;
 	public static int width = 0;

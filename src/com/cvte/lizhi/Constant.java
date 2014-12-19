@@ -108,6 +108,8 @@ public class Constant  {
 	public static String paste = "粘贴";
 
 	public static String report = "举报";
+	
+	public static String loading = "正在加载";
 
 	public static String emptyString = " ";
 

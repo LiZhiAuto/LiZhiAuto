@@ -548,6 +548,7 @@ public class My extends UiAutomatorTestCase {
 
 
 
+	
 	public void PointRule(int index) throws UiObjectNotFoundException{
 		Article article = new Article();
 		int oldPoint,newPoint; 
@@ -561,7 +562,6 @@ public class My extends UiAutomatorTestCase {
 		oldPoint = newPoint;
 		article.EnterArticlePage();
 		article.ArticlePraise(index);
-		Back();
 		newPoint = GetPoint();
 		ComparePoint(oldPoint,newPoint,Constant.PRAISEARTICLE);
 	}
@@ -601,6 +601,8 @@ public class My extends UiAutomatorTestCase {
 			String point[] = Array[0].split("：");
 			points = point[1];
 			Constant.WriteLog(Constant.info, "检测到当前积分为"+point[1]);
+		}else{
+			
 		}
 		int point = Integer.valueOf(points.trim()).intValue();
 		return point;

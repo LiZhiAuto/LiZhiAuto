@@ -93,11 +93,26 @@ public class Article extends UiAutomatorTestCase {
 			UiObject article = Constant.GetTextObject(Constant.article);
 			article.clickAndWaitForNewWindow();
 			UiObject textView = ArticleUI.GetListViewContent(index,TITLE);
+		
 			if(textView!=null){
+				
 				String title = textView.getText();
 				Constant.WriteLog(Constant.info, "所点击的文章标题为"+textView.getText());
 				textView.clickAndWaitForNewWindow();
-				sleep(5000);
+				int time = 0;
+				while(time<7){
+					sleep(5000);
+					Constant.WriteLog(Constant.fail,"等待文章加载");
+					UiObject loadArticle = Constant.GetTextObject(Constant.loading);
+					if(loadArticle==null){
+						break;
+					}
+					time +=1;
+				}
+				if(time==7){
+					Constant.WriteLog(Constant.fail,"文章加载超时");
+				}
+				
 				return title;
 			}else{
 				Constant.WriteLog(Constant.fail,"未找到文章标题");
